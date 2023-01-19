@@ -171,6 +171,31 @@ class Authprovider with ChangeNotifier {
 
     print(responseJson);
   }
+  Future<http.Response> unblock(Map<String, dynamic> bodyData) async {
+    print(bodyData);
+    var body = jsonEncode(bodyData);
+    const url =
+        'https://distributor-app.fableadtechnolabs.com/admin/api/ajax.php/?action=unblock_product';
+    var responseJson;
+
+    try {
+      final response = await http
+          .post(Uri.parse(url), body: bodyData, headers: headers)
+          .timeout(
+        const Duration(seconds: 30),
+        onTimeout: () {
+          throw const SocketException('Something went wrong');
+        },
+      );
+      print(response.statusCode);
+      responseJson = responses(response);
+    } on SocketException {
+      throw FetchDataException('No Internet connection');
+    }
+    return responseJson;
+
+    print(responseJson);
+  }
 
 }
 

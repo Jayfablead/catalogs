@@ -114,7 +114,7 @@ class _SignuppageState extends State<Signuppage> {
                             mycontroller: _lname,
                             text: "Enter your Lastname",
                             type: TextInputType.emailAddress,
-                            icon: const Icon(Icons.email_outlined),
+                            icon: const Icon(Icons.people),
                             hint: "Last Name",
                           )),
                       SizedBox(height: 2.h),

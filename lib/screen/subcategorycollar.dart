@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:catalogs/modal/prodmodal.dart';
 import 'package:catalogs/screen/productdetail1.dart';
+import 'package:catalogs/widgets/spink.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
@@ -85,7 +86,8 @@ class _subcategoryState extends State<subcategory> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Scaffold(
+      child: commanScreen(isLoading: false,
+      scaffold: Scaffold(
         endDrawer: drawer1(context),
         appBar: AppBar(
           automaticallyImplyLeading: true,
@@ -120,9 +122,10 @@ class _subcategoryState extends State<subcategory> {
                     });
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (context) => productdetail1(
-                            indew: prods?.productData?[index].apId,
-                            pname: prods?.productData?[index].apName),
+                        builder: (context) =>
+                            productdetail1(
+                                indew: prods?.productData?[index].apId,
+                                pname: prods?.productData?[index].apName),
                       ),
                     );
                   },
@@ -171,12 +174,12 @@ class _subcategoryState extends State<subcategory> {
           ),
         ),
       ),
-    );
+    ),);
   }
 
   productsapi() async {
     SharedPreferences _sharedpreferences =
-        await SharedPreferences.getInstance();
+    await SharedPreferences.getInstance();
     final Map<String, String> data = {};
     data['action'] = 'fetch_products';
     // data['d_id'] = '24';
