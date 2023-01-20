@@ -80,7 +80,9 @@ class _subcategoryState extends State<subcategory> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    productsapi();
+    setState(() {
+      productsapi();
+    });
   }
 
   @override

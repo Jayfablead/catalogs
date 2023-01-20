@@ -2,7 +2,9 @@ import 'dart:convert';
 
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:catalogs/modal/Colorsdata.dart';
+import 'package:catalogs/modal/errmodal.dart';
 import 'package:catalogs/widgets/spink.dart';
+import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -36,7 +38,7 @@ class Sachen {
 
 class _productdetail1State extends State<productdetail1> {
   int index1 = 0;
-  int index2 = -1;
+  int index2 = 0;
   bool emty = true;
   bool checkblock = true;
   final _formKey = GlobalKey<FormState>();
@@ -46,6 +48,8 @@ class _productdetail1State extends State<productdetail1> {
   TextEditingController _qty = TextEditingController();
   int _current = 0;
   int _current1 = 0;
+  bool cur1 = true;
+  bool cur2 = true;
 
   String size = "Xs";
   List<String> image1 = [
@@ -112,7 +116,9 @@ class _productdetail1State extends State<productdetail1> {
   void initState() {
     select1 = true;
     select2 = false;
-    clrnameapi();
+    setState(() {
+      clrnameapi();
+    });
 
     // TODO: implement initState
     super.initState();
@@ -145,13 +151,53 @@ class _productdetail1State extends State<productdetail1> {
                 padding: EdgeInsets.all(3.w),
                 child: SingleChildScrollView(
                   child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Stack(
-                          children: [
-                            CarouselSlider(
-                              carouselController: _controller,
-                              items: ((index1 == 0)
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Stack(
+                        children: [
+                          CarouselSlider(
+                            carouselController: _controller,
+                            items: ((index1 == 0)
+                                    ? image1
+                                    : (index1 == 1)
+                                        ? image2
+                                        : (index1 == 2)
+                                            ? image3
+                                            : (index1 == 3)
+                                                ? image4
+                                                : image5)
+                                .map((item) {
+                              return Container(
+                                height: 30.h,
+                                child: Image.asset(
+                                  item,
+                                  fit: BoxFit.fitHeight,
+                                ),
+                              );
+                            }).toList(),
+                            options: CarouselOptions(
+                              onPageChanged: (index, reason) {
+                                setState(() {
+                                  _current = index;
+                                });
+                              },
+                              height: 31.h,
+                              enlargeCenterPage: false,
+                              autoPlay: true,
+                              aspectRatio: 16 / 9,
+                              autoPlayCurve: Curves.fastOutSlowIn,
+                              enableInfiniteScroll: false,
+                              autoPlayAnimationDuration:
+                                  Duration(milliseconds: 50),
+                              viewportFraction: 1,
+                            ),
+                          ),
+                          Positioned(
+                            top: 27.h,
+                            left: 40.w,
+                            child: AnimatedSmoothIndicator(
+                              activeIndex: _current,
+                              count: ((index1 == 0)
                                       ? image1
                                       : (index1 == 1)
                                           ? image2
@@ -160,467 +206,407 @@ class _productdetail1State extends State<productdetail1> {
                                               : (index1 == 3)
                                                   ? image4
                                                   : image5)
-                                  .map((item) {
-                                return Container(
-                                  height: 30.h,
-                                  child: Image.asset(
-                                    item,
-                                    fit: BoxFit.fitHeight,
-                                  ),
-                                );
-                              }).toList(),
-                              options: CarouselOptions(
-                                onPageChanged: (index, reason) {
-                                  setState(() {
-                                    _current = index;
-                                  });
-                                },
-                                height: 31.h,
-                                enlargeCenterPage: false,
-                                autoPlay: true,
-                                aspectRatio: 16 / 9,
-                                autoPlayCurve: Curves.fastOutSlowIn,
-                                enableInfiniteScroll: false,
-                                autoPlayAnimationDuration:
-                                    Duration(milliseconds: 500),
-                                viewportFraction: 1,
-                              ),
+                                  .length,
+                              effect: ScrollingDotsEffect(
+                                  spacing: 8.0,
+                                  radius: 3.0,
+                                  dotWidth: 8.0,
+                                  dotHeight: 8.0,
+                                  paintStyle: PaintingStyle.stroke,
+                                  strokeWidth: 1.5,
+                                  dotColor: Colors.grey,
+                                  activeDotColor: Colors.red),
                             ),
-                            Positioned(
-                              top: 27.h,
-                              left: 40.w,
-                              child: AnimatedSmoothIndicator(
-                                activeIndex: _current,
-                                count: ((index1 == 0)
-                                        ? image1
-                                        : (index1 == 1)
-                                            ? image2
-                                            : (index1 == 2)
-                                                ? image3
-                                                : (index1 == 3)
-                                                    ? image4
-                                                    : image5)
-                                    .length,
-                                effect: ScrollingDotsEffect(
-                                    spacing: 8.0,
-                                    radius: 3.0,
-                                    dotWidth: 8.0,
-                                    dotHeight: 8.0,
-                                    paintStyle: PaintingStyle.stroke,
-                                    strokeWidth: 1.5,
-                                    dotColor: Colors.grey,
-                                    activeDotColor: Colors.red),
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 4.h,
-                        ),
-                        Text(widget.pname.toString(),
-                            style: TextStyle(
-                                fontFamily: "Poppins",
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20.sp)),
-                        SizedBox(
-                          height: 2.h,
-                        ),
-                        Text("Colors : " + "  " + clrdata!.coloursdata![index1],
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                                fontFamily: "Poppins",
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 12.sp)),
-                        SizedBox(
-                          height: 2.h,
-                        ),
-                        Container(
-                          height: 7.5.h,
-                          width: MediaQuery.of(context).size.width,
-                          child: ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              physics: const BouncingScrollPhysics(),
-                              shrinkWrap: true,
-                              itemCount: clrdata?.coloursdata?.length,
-                              itemBuilder: (context, index) {
-                                return Container(
-                                  child: Column(
-                                    children: [
-                                      GestureDetector(
-                                        onTap: () {
-                                          setState(() {
-                                            index1 = index;
-                                          });
-                                          _qty.clear();
-                                          index2 = -1;
-                                          checkblock = true;
-                                        },
-                                        child: Padding(
-                                          padding: EdgeInsets.all(8.0),
-                                          child: Container(
-                                            padding: EdgeInsets.all(8.0),
-                                            alignment: Alignment.center,
-                                            height: 5.h,
-                                            decoration: BoxDecoration(
-                                              color: index1 == index
-                                                  ? Color.fromARGB(
-                                                      55, 248, 139, 139)
-                                                  : Color(0xffffffff),
-                                              borderRadius:
-                                                  BorderRadius.circular(15),
-                                              border: Border.all(
-                                                  width: 2,
-                                                  color: index1 == index
-                                                      ? Color.fromARGB(
-                                                          255, 243, 33, 33)
-                                                      : Colors.transparent),
-                                            ),
-                                            child: Text(
-                                              clrdata!.coloursdata![index],
-                                              style: textStyle,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              }),
-                        ),
-                        SizedBox(
-                          height: 2.h,
-                        ),
-                        Text(
-                            (index2 == 0)
-                                ? "Size :  XS"
-                                : (index2 == 1)
-                                    ? "Size :  S"
-                                    : (index2 == 2)
-                                        ? "Size :  M"
-                                        : (index2 == 3)
-                                            ? "Size :  L"
-                                            : (index2 == 4)
-                                                ? "Size :  XL"
-                                                : (index2 == 5)
-                                                    ? "Size :  XXL"
-                                                    : (index2 == 6)
-                                                        ? "Size :  3XL"
-                                                        : (index2 == 7)
-                                                            ? "Size :  4XL"
-                                                            : (index2 == 8)
-                                                                ? "Size :  5XL"
-                                                                : 'Size :  ',
-                            style: TextStyle(
-                                fontFamily: "Poppins",
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 12.sp)),
-                        SizedBox(
-                          height: 2.h,
-                        ),
-                        Container(
-                          height: 8.h,
-                          width: MediaQuery.of(context).size.width,
-                          child: ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              physics: const BouncingScrollPhysics(),
-                              shrinkWrap: true,
-                              itemCount: items.length,
-                              itemBuilder: (context, index) {
-                                return Column(
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 4.h,
+                      ),
+                      Text(widget.pname.toString(),
+                          style: TextStyle(
+                              fontFamily: "Poppins",
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20.sp)),
+                      SizedBox(
+                        height: 2.h,
+                      ),
+
+                      // ======================== Colors Data ======================
+
+                      Text("Colors : " + "  " + clrdata!.coloursdata![index1],
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                              fontFamily: "Poppins",
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 12.sp)),
+                      SizedBox(
+                        height: 2.h,
+                      ),
+                      Container(
+                        height: 7.5.h,
+                        width: MediaQuery.of(context).size.width,
+                        child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            physics: const BouncingScrollPhysics(),
+                            shrinkWrap: true,
+                            itemCount: clrdata?.coloursdata?.length,
+                            itemBuilder: (context, index) {
+                              return Container(
+                                child: Column(
                                   children: [
                                     GestureDetector(
                                       onTap: () {
                                         setState(() {
-                                          index2 = index;
+                                          index1 = index;
+                                          cur1 = !cur1;
                                         });
+                                        _qty.clear();
+                                        index2 = 0;
+                                        checkblock = true;
                                       },
                                       child: Padding(
-                                        padding:
-                                            EdgeInsets.only(left: 8, right: 8),
+                                        padding: EdgeInsets.all(8.0),
                                         child: Container(
-                                          height: 11.w,
-                                          width: 11.w,
+                                          padding: EdgeInsets.all(8.0),
+                                          alignment: Alignment.center,
+                                          height: 5.h,
                                           decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(9),
-                                            color: index2 == index
+                                            color: index1 == index
                                                 ? Color.fromARGB(
                                                     55, 248, 139, 139)
                                                 : Color(0xffffffff),
+                                            borderRadius:
+                                                BorderRadius.circular(15),
                                             border: Border.all(
                                                 width: 2,
-                                                color: index2 == index
+                                                color: index1 == index
                                                     ? Color.fromARGB(
                                                         255, 243, 33, 33)
                                                     : Colors.transparent),
                                           ),
-                                          alignment: Alignment.center,
-                                          child: Text('${items[index]}',
-                                              style: TextStyle(
-                                                  fontFamily: "Poppins",
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 12.sp)),
+                                          child: Text(
+                                            clrdata!.coloursdata![index],
+                                            style: textStyle,
+                                          ),
                                         ),
                                       ),
                                     ),
                                   ],
-                                );
-                              }),
-                        ),
-                        SizedBox(
-                          height: 1.h,
-                        ),
-                        Text("Stock : ",
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                                fontFamily: "Poppins",
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 12.sp)),
-                        SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.07),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Container(
-                              alignment: Alignment.center,
-                              height: MediaQuery.of(context).size.height * 0.06,
-                              child: Text('Quantity :',
-                                  style: TextStyle(
-                                      fontFamily: "Poppins",
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 12.sp)),
-                            ),
-                            SizedBox(
-                              width: 2.w,
-                            ),
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.20,
-                              height: MediaQuery.of(context).size.height * 0.08,
-                              child: TextFormField(
-                                validator: (value) {
-                                  setState(() {
-                                    emty = value!.isEmpty;
-                                    print(value.isEmpty);
-                                  });
+                                ),
+                              );
+                            }),
+                      ),
+                      SizedBox(
+                        height: 2.h,
+                      ),
 
-                                  if (value!.isEmpty) {
-                                    showDialog(
-                                      context: context,
-                                      builder: (context) =>
-                                          CupertinoAlertDialog(
-                                        actions: [
-                                          TextButton(
-                                            onPressed: () {
-                                              Navigator.pop(context);
-                                            },
-                                            child: Text(
-                                              'Ok',
-                                              style: TextStyle(
-                                                  color: Color(0xffe16e6e)),
-                                            ),
-                                          ),
-                                        ],
-                                        title: Text("Please Add Quantity"),
+                      //================ Size Data ===============
+
+                      Text(
+                          (index2 == 0)
+                              ? "Size :  XS"
+                              : (index2 == 1)
+                                  ? "Size :  S"
+                                  : (index2 == 2)
+                                      ? "Size :  M"
+                                      : (index2 == 3)
+                                          ? "Size :  L"
+                                          : (index2 == 4)
+                                              ? "Size :  XL"
+                                              : (index2 == 5)
+                                                  ? "Size :  XXL"
+                                                  : (index2 == 6)
+                                                      ? "Size :  3XL"
+                                                      : (index2 == 7)
+                                                          ? "Size :  4XL"
+                                                          : "Size :  5XL",
+                          style: TextStyle(
+                              fontFamily: "Poppins",
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 12.sp)),
+                      SizedBox(
+                        height: 2.h,
+                      ),
+                      Container(
+                        height: 8.h,
+                        width: MediaQuery.of(context).size.width,
+                        child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            physics: const BouncingScrollPhysics(),
+                            shrinkWrap: true,
+                            itemCount: (items.length),
+                            itemBuilder: (context, index3) {
+                              return Column(
+                                children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        index2 = index3;
+                                        cur2 = !cur2;
+                                        _qty.clear();
+                                        checkblock = true;
+                                      });
+                                    },
+                                    child: Padding(
+                                      padding:
+                                          EdgeInsets.only(left: 8, right: 8),
+                                      child: Container(
+                                        height: 11.w,
+                                        width: 11.w,
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(9),
+                                          color: index2 == index3
+                                              ? Color.fromARGB(
+                                                  55, 248, 139, 139)
+                                              : Color(0xffffffff),
+                                          border: Border.all(
+                                              width: 2,
+                                              color: index2 == index3
+                                                  ? Color.fromARGB(
+                                                      255, 243, 33, 33)
+                                                  : Colors.transparent),
+                                        ),
+                                        alignment: Alignment.center,
+                                        child: Text('${items[index3]}',
+                                            style: TextStyle(
+                                                fontFamily: "Poppins",
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 12.sp)),
                                       ),
-                                    );
-                                    // showDialog(
-                                    //   context: context,
-                                    //   builder: (context) => AlertDialog(
-                                    //     shape: RoundedRectangleBorder(
-                                    //       borderRadius:
-                                    //           BorderRadius.circular(10),
-                                    //     ),
-                                    //     actions: [
-                                    //       TextButton(
-                                    //         onPressed: () {
-                                    //           Navigator.pop(context);
-                                    //         },
-                                    //         child: Text(
-                                    //           'Ok',
-                                    //           style: TextStyle(
-                                    //             fontSize: 5.w,
-                                    //             color: Color(0xfff65b5b),
-                                    //           ),
-                                    //         ),
-                                    //       ),
-                                    //     ],
-                                    //     content: Text(
-                                    //       '!!!! You Have To Enter The Quantity To Block !!!!',
-                                    //       style: TextStyle(fontSize: 6.w),
-                                    //     ),
-                                    //   ),
-                                    // );
-                                  }
-                                  return null;
-                                },
-                                controller: _qty,
-                                cursorColor: Colors.black54,
-                                keyboardType: TextInputType.numberWithOptions(),
-                                decoration: InputDecoration(
-                                  hintText: 'Qty',
-                                  hintStyle: TextStyle(fontSize: 16),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(8),
-                                    borderSide: BorderSide(
-                                      width: 0,
-                                      style: BorderStyle.none,
                                     ),
                                   ),
-                                  filled: true,
-                                  contentPadding: EdgeInsets.all(16),
-                                  fillColor: Color.fromARGB(40, 250, 114, 104),
+                                ],
+                              );
+                            }),
+                      ),
+                      // SizedBox(
+                      //   height: 1.h,
+                      // ),
+
+                      // ======= stocks details ==========
+
+                      Text(
+                        (index2 == 0)
+                            ? "Available Stock : " +
+                                ' ' +
+                                clrdata!.sizes![index1].xs!
+                            : (index2 == 1)
+                                ? "Available Stock : " +
+                                    ' ' +
+                                    clrdata!.sizes![index1].s!
+                                : (index2 == 2)
+                                    ? "Available Stock : " +
+                                        ' ' +
+                                        clrdata!.sizes![index1].m!
+                                    : (index2 == 3)
+                                        ? "Available Stock : " +
+                                            ' ' +
+                                            clrdata!.sizes![index1].l!
+                                        : (index2 == 4)
+                                            ? "Available Stock : " +
+                                                ' ' +
+                                                clrdata!.sizes![index1].xl!
+                                            : (index2 == 5)
+                                                ? "Available Stock : " +
+                                                    ' ' +
+                                                    clrdata!.sizes![index1].xxl!
+                                                : (index2 == 6)
+                                                    ? "Available Stock : " +
+                                                        ' ' +
+                                                        clrdata!.sizes![index1]
+                                                            .s3xl!
+                                                    : (index2 == 7)
+                                                        ? "Available Stock : " +
+                                                            ' ' +
+                                                            clrdata!
+                                                                .sizes![index1]
+                                                                .s4xl!
+                                                        : "Available Stock : " +
+                                                            ' ' +
+                                                            clrdata!
+                                                                .sizes![index1]
+                                                                .s5xl!,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                            fontFamily: "Poppins",
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 12.sp),
+                      ),
+                      SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.04),
+
+                      //========================= Button Row ============
+
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Container(
+                            alignment: Alignment.center,
+                            height: MediaQuery.of(context).size.height * 0.06,
+                            child: Text('Quantity :',
+                                style: TextStyle(
+                                    fontFamily: "Poppins",
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 12.sp)),
+                          ),
+                          SizedBox(
+                            width: 2.w,
+                          ),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.20,
+                            height: MediaQuery.of(context).size.height * 0.08,
+                            child: TextFormField(
+                              validator: (value) {
+                                setState(() {
+                                  emty = value!.isEmpty;
+                                  print(value.isEmpty);
+                                });
+
+                                if (value!.isEmpty) {
+                                 dialog1();
+                                }
+                                return null;
+                              },
+                              controller: _qty,
+                              cursorColor: Colors.black54,
+                              keyboardType: TextInputType.numberWithOptions(),
+                              decoration: InputDecoration(
+                                hintText: 'Qty',
+                                hintStyle: TextStyle(fontSize: 16),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide: BorderSide(
+                                    width: 0,
+                                    style: BorderStyle.none,
+                                  ),
                                 ),
+                                filled: true,
+                                contentPadding: EdgeInsets.all(16),
+                                fillColor: Color.fromARGB(40, 250, 114, 104),
                               ),
                             ),
-                            SizedBox(
-                              width: 10.w,
-                            ),
-                            // ElevatedButton(
-                            //   style: ButtonStyle(
-                            //     minimumSize: MaterialStateProperty.all<Size>(
-                            //       Size(MediaQuery.of(context).size.width * 0.40,
-                            //           MediaQuery.of(context).size.height * 0.07),
-                            //     ),
-                            //     backgroundColor: MaterialStateProperty.all<Color>(
-                            //         Colors.redAccent),
-                            //     shape: MaterialStateProperty.all<
-                            //         RoundedRectangleBorder>(
-                            //       RoundedRectangleBorder(
-                            //         borderRadius: BorderRadius.circular(18.0),
-                            //       ),
-                            //     ),
-                            //   ),
-                            //   onPressed: () {
-                            //     setState(() {
-                            //       checkblock = !checkblock;
-                            //     });
-                            //     blockapi();
-                            //   },
-                            //   child: Text(
-                            //     checkblock ? 'Block Item' : 'Unblock item',
-                            //     style: TextStyle(
-                            //       fontSize: 5.w,
-                            //     ),
-                            //   ),
-                            // ),
-                            checkblock
-                                ? InkWell(
-                                    onTap: () {
-                                      if (_formKey1.currentState!.validate()) {
-                                        print(emty);
-                                      }
-                                      if (index2 == -1) {
-                                        showDialog(
-                                            context: context,
-                                            builder: (context) =>
-                                                CupertinoAlertDialog(
-                                                  actions: [
-                                                    TextButton(
-                                                        onPressed: () {
-                                                          Navigator.pop(
-                                                              context);
-                                                        },
-                                                        child: Text(
-                                                          'Ok',
-                                                          style: TextStyle(
-                                                              color: Color(
-                                                                  0xffe16e6e)),
-                                                        ))
-                                                  ],
-                                                  title: Text(
-                                                      "Please Select Size"),
-                                                )
-                                            //     AlertDialog(
-                                            //   shape: RoundedRectangleBorder(
-                                            //     borderRadius:
-                                            //         BorderRadius.circular(10),
-                                            //   ),
-                                            //   actions: [
-                                            //     TextButton(
-                                            //       onPressed: () {
-                                            //         Navigator.pop(context);
-                                            //       },
-                                            //       child: Text(
-                                            //         'Ok',
-                                            //         style: TextStyle(
-                                            //           fontSize: 5.w,
-                                            //           color: Color(0xfff65b5b),
-                                            //         ),
-                                            //       ),
-                                            //     ),
-                                            //   ],
-                                            //   content: Text(
-                                            //     "You Did'nt Selected Size",
-                                            //     style: TextStyle(fontSize: 6.w),
-                                            //   ),
-                                            // ),
-                                            );
-                                      } else {
-                                        blockapi();
-                                      }
-                                    },
-                                    child: Container(
-                                      alignment: Alignment.center,
-                                      width: MediaQuery.of(context).size.width *
-                                          0.40,
-                                      height:
-                                          MediaQuery.of(context).size.height *
-                                              0.06,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(10),
-                                        color: Color(0xfff65b5b),
-                                      ),
-                                      child: Text(
-                                        'Block Item',
-                                        style: TextStyle(
-                                            color: Color(0xffececec),
-                                            fontSize: 5.2.w,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ),
-                                  )
-                                : InkWell(
-                                    onTap: () {
-                                      if (_formKey1.currentState!.validate()) {
-                                        print(emty);
-                                      }
+                          ),
+                          SizedBox(
+                            width: 10.w,
+                          ),
+                          checkblock
+                              ? InkWell(
+                                  onTap: () {
+                                    if (_formKey1.currentState!.validate()) {
                                       print(emty);
-
-                                      unblockapi();
-                                    },
-                                    child: Container(
-                                      alignment: Alignment.center,
-                                      width: MediaQuery.of(context).size.width *
-                                          0.40,
-                                      height:
-                                          MediaQuery.of(context).size.height *
-                                              0.06,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(10),
-                                        color: Color(0xfff65b5b),
-                                      ),
-                                      child: Text(
-                                        'Unblock Item',
-                                        style: TextStyle(
-                                            color: Color(0xffececec),
-                                            fontSize: 5.2.w,
-                                            fontWeight: FontWeight.bold),
-                                      ),
+                                    }
+                                    if (index2 == -1) {
+                                      showDialog(
+                                          context: context,
+                                          builder: (context) =>
+                                              CupertinoAlertDialog(
+                                                actions: [
+                                                  TextButton(
+                                                      onPressed: () {
+                                                        Navigator.pop(context);
+                                                      },
+                                                      child: Text(
+                                                        'Ok',
+                                                        style: TextStyle(
+                                                            color: Color(
+                                                                0xffe16e6e)),
+                                                      ))
+                                                ],
+                                                title:
+                                                    Text("Please Select Size"),
+                                              )
+                                          //     AlertDialog(
+                                          //   shape: RoundedRectangleBorder(
+                                          //     borderRadius:
+                                          //         BorderRadius.circular(10),
+                                          //   ),
+                                          //   actions: [
+                                          //     TextButton(
+                                          //       onPressed: () {
+                                          //         Navigator.pop(context);
+                                          //       },
+                                          //       child: Text(
+                                          //         'Ok',
+                                          //         style: TextStyle(
+                                          //           fontSize: 5.w,
+                                          //           color: Color(0xfff65b5b),
+                                          //         ),
+                                          //       ),
+                                          //     ),
+                                          //   ],
+                                          //   content: Text(
+                                          //     "You Did'nt Selected Size",
+                                          //     style: TextStyle(fontSize: 6.w),
+                                          //   ),
+                                          // ),
+                                          );
+                                    } else {
+                                      blockapi();
+                                    }
+                                  },
+                                  child: Container(
+                                    alignment: Alignment.center,
+                                    width: MediaQuery.of(context).size.width *
+                                        0.40,
+                                    height: MediaQuery.of(context).size.height *
+                                        0.06,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      color: Color(0xfff65b5b),
+                                    ),
+                                    child: Text(
+                                      'Block Item',
+                                      style: TextStyle(
+                                          color: Color(0xffececec),
+                                          fontSize: 5.2.w,
+                                          fontWeight: FontWeight.bold),
                                     ),
                                   ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 2.h,
-                        ),
-                      ]),
+                                )
+                              : InkWell(
+                                  onTap: () {
+                                    if (_formKey1.currentState!.validate()) {
+                                      print(emty);
+                                    }
+                                    print(emty);
+
+                                    unblockapi();
+                                  },
+                                  child: Container(
+                                    alignment: Alignment.center,
+                                    width: MediaQuery.of(context).size.width *
+                                        0.40,
+                                    height: MediaQuery.of(context).size.height *
+                                        0.06,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      color: Color(0xfff65b5b),
+                                    ),
+                                    child: Text(
+                                      'Unblock Item',
+                                      style: TextStyle(
+                                          color: Color(0xffececec),
+                                          fontSize: 5.2.w,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 2.h,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -653,13 +639,13 @@ class _productdetail1State extends State<productdetail1> {
           // clrdata = colorsdata.fromJson(json.decode(response.body));
           clrdata = colorsdata.fromJson(jsonDecode(response.body));
 
-
           if (response.statusCode == 200) {
-            print(clrdata!.coloursdata!.toString());
-
+            print(clrdata!.sizes![index1].xs![index2].toString());
 
             if (kDebugMode) {}
-          } else {CircularProgressIndicator();}
+          } else {
+            CircularProgressIndicator();
+          }
         });
       } else {
         setState(() {});
@@ -687,9 +673,9 @@ class _productdetail1State extends State<productdetail1> {
         if (internet) {
           Authprovider().block(data).then((Response response) async {
             print(response.statusCode);
-            // userData = usermodal.fromJson(json.decode(response.body));
+            eror = Datamodal.fromJson(json.decode(response.body));
 
-            if (response.statusCode == 200) {
+            if (response.statusCode == 200 && eror!.status == 'success') {
               print('Blocked');
               checkblock = !checkblock;
               Fluttertoast.showToast(
@@ -701,7 +687,33 @@ class _productdetail1State extends State<productdetail1> {
                 backgroundColor: Colors.indigo,
               );
               if (kDebugMode) {}
-            } else {}
+            } else {
+              dialog();
+              // showDialog(
+              //   context: context,
+              //   builder: (context) => CupertinoAlertDialog(
+              //     actions: [
+              //       TextButton(
+              //           onPressed: () {
+              //             Navigator.pop(context);
+              //           },
+              //           child: Text(
+              //             'Ok',
+              //             style: TextStyle(color: Color(0xffe16e6e)),
+              //           ))
+              //     ],
+              //     content: Column(
+              //       children: [
+              //         Divider(color: Colors.black54),
+              //         Text('Availlable Quanity : ' +
+              //             ' ' +
+              //             eror!.quantity.toString()),
+              //       ],
+              //     ),
+              //     title: Text("Invalid Quantity"),
+              //   ),
+              // );
+            }
           });
         } else {
           setState(() {});
@@ -737,7 +749,7 @@ class _productdetail1State extends State<productdetail1> {
               checkblock = !checkblock;
 
               Fluttertoast.showToast(
-                msg: "Product Deleted Successfully",
+                msg: "Product Unblocked Successfully",
                 textColor: Colors.white,
                 toastLength: Toast.LENGTH_SHORT,
                 timeInSecForIosWeb: 1,
@@ -750,6 +762,184 @@ class _productdetail1State extends State<productdetail1> {
         } else {
           setState(() {});
         }
+      },
+    );
+  }
+
+  TextStyle textstyle = TextStyle(
+      fontSize: 11.sp,
+      color: Colors.grey.shade700,
+      fontWeight: FontWeight.w400,
+      fontFamily: "Poppins");
+  dialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16.0)),
+            // elevation: 0.0,
+            backgroundColor: Colors.transparent,
+            child: Container(
+              margin: EdgeInsets.only(left: 0.0, right: 0.0),
+              child: Stack(
+                children: <Widget>[
+                  Container(
+                    padding: EdgeInsets.only(
+                      top: 18.0,
+                    ),
+                    // margin: EdgeInsets.only(top: 13.0,right: 8.0),
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.rectangle,
+                        borderRadius: BorderRadius.circular(16.0),
+                        boxShadow: <BoxShadow>[
+                          BoxShadow(
+                            color: Colors.black26,
+                            blurRadius: 0.0,
+                            offset: Offset(0.0, 0.0),
+                          ),
+                        ]),
+                    child: Container(
+                      width: 75.w,
+                      height: 15.h,
+                      child: Column(crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            'assets/error.png',
+                            height: 6.3.h,
+                            width: 90.w,
+                          ),
+                          SizedBox(
+                            height: 2.h,
+                          ),
+                          Text(
+                            "Available Quantity : " +
+                                " " +
+                                eror!.quantity.toString(),
+                            style: TextStyle(
+                                color: Color(0xff181818),
+                                fontFamily: "poppins",
+                                fontWeight: FontWeight.w600,
+                                fontSize: 12.sp),
+                          ),
+                          SizedBox(
+                            height: 1.h,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    // top: 0.h,
+                    // left: 75.w,
+                    right: 0.0,
+
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Align(
+                        alignment: Alignment.topRight,
+                        child: CircleAvatar(
+                          radius: 14.0,
+                          backgroundColor: Colors.white,
+                          child: Icon(
+                            Icons.close,
+                            color: Color(0xff000000),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ));
+      },
+    );
+  }
+  dialog1() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16.0)),
+            // elevation: 0.0,
+            backgroundColor: Colors.transparent,
+            child: Container(
+              margin: EdgeInsets.only(left: 0.0, right: 0.0),
+              child: Stack(
+                children: <Widget>[
+                  Container(
+                    padding: EdgeInsets.only(
+                      top: 18.0,
+                    ),
+                    // margin: EdgeInsets.only(top: 13.0,right: 8.0),
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.rectangle,
+                        borderRadius: BorderRadius.circular(16.0),
+                        boxShadow: <BoxShadow>[
+                          BoxShadow(
+                            color: Colors.black26,
+                            blurRadius: 0.0,
+                            offset: Offset(0.0, 0.0),
+                          ),
+                        ]),
+                    child: Container(
+                      width: 75.w,
+                      height: 15.h,
+                      child: Column(crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            'assets/error.png',
+                            height: 6.3.h,
+                            width: 90.w,
+                          ),
+                          SizedBox(
+                            height: 2.h,
+                          ),
+                          Text(
+                            'Enter Quantity To Block Product',
+                            style: TextStyle(
+                                color: Color(0xff181818),
+                                fontFamily: "poppins",
+                                fontWeight: FontWeight.w600,
+                                fontSize: 12.sp),
+                          ),
+                          SizedBox(
+                            height: 1.h,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    // top: 0.h,
+                    // left: 75.w,
+                    right: 0.0,
+
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Align(
+                        alignment: Alignment.topRight,
+                        child: CircleAvatar(
+                          radius: 14.0,
+                          backgroundColor: Colors.white,
+                          child: Icon(
+                            Icons.close,
+                            color: Color(0xff000000),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ));
       },
     );
   }

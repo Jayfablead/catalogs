@@ -1,4 +1,5 @@
 
+import 'package:catalogs/modal/errmodal.dart';
 import 'package:catalogs/provider/updateprovider.dart';
 import 'package:connectivity/connectivity.dart';
 
@@ -20,6 +21,7 @@ usermodal? userData;
 updateddata? newData;
 colorsdata? clrdata;
 Prodmodal? prods;
+Datamodal? eror;
 
 
 const String baseUrl = 'https://adibun.fableadtechnolabs.com/api';

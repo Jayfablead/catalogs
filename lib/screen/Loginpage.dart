@@ -441,13 +441,14 @@ class _LoginpageState extends State<Loginpage> {
                 userData!.status == "Check your mail!") {
               setState(() async {
                 Fluttertoast.showToast(
-                  msg: "Check Yor MailBox",
+                  msg: "Check Your MailBox",
                   textColor: Colors.white,
                   toastLength: Toast.LENGTH_SHORT,
                   timeInSecForIosWeb: 1,
                   gravity: ToastGravity.BOTTOM,
                   backgroundColor: Colors.indigo,
                 );
+                _forgetpassword.clear();
                 Navigator.pop(context);
                 isLoading = false;
               });
