@@ -1,4 +1,5 @@
 
+import 'package:catalogs/screen/cartsystem.dart';
 import 'package:catalogs/screen/subcategoryshirt.dart';
 import 'package:catalogs/screen/subcategoryswertshirt.dart';
 import 'package:flutter/cupertino.dart';
@@ -215,6 +216,27 @@ class _drawer1State extends State<drawer1> {
                 },
                 child: Text(
                   "WORKWEAR",
+                  style: TextStyle(
+                      color: (!data[6]) ? Colors.black : Colors.orange,
+                      fontSize: 10.sp,
+                      fontFamily: "Poppins",
+                      fontWeight: FontWeight.w600),
+                )),
+          ),
+          Divider(),
+          Padding(
+            padding: EdgeInsets.all(8.0),
+            child: GestureDetector(
+                onTap: () {
+                  setState(() {
+                    data[6] = !data[6];
+                  });
+                  Navigator.of(context).pop();
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => Cartpage()));
+                },
+                child: Text(
+                  "My Cart",
                   style: TextStyle(
                       color: (!data[6]) ? Colors.black : Colors.orange,
                       fontSize: 10.sp,

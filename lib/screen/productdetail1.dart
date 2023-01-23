@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:catalogs/modal/Colorsdata.dart';
 import 'package:catalogs/modal/errmodal.dart';
+import 'package:catalogs/screen/cartsystem.dart';
 import 'package:catalogs/widgets/spink.dart';
 import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/cupertino.dart';
@@ -109,6 +110,19 @@ class _productdetail1State extends State<productdetail1> {
     '4XL',
     '5XL',
   ];
+  List<bool> current = [
+    true,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+  ];
+
+  // tf = List.generate(someList.length, (index)=>false);
 
   final CarouselController _controller = CarouselController();
 
@@ -118,6 +132,7 @@ class _productdetail1State extends State<productdetail1> {
     select2 = false;
     setState(() {
       clrnameapi();
+      userapi();
     });
 
     // TODO: implement initState
@@ -166,15 +181,17 @@ class _productdetail1State extends State<productdetail1> {
                                             : (index1 == 3)
                                                 ? image4
                                                 : image5)
-                                .map((item) {
-                              return Container(
-                                height: 30.h,
-                                child: Image.asset(
-                                  item,
-                                  fit: BoxFit.fitHeight,
-                                ),
-                              );
-                            }).toList(),
+                                .map(
+                              (item) {
+                                return Container(
+                                  height: 30.h,
+                                  child: Image.asset(
+                                    item,
+                                    fit: BoxFit.fitHeight,
+                                  ),
+                                );
+                              },
+                            ).toList(),
                             options: CarouselOptions(
                               onPageChanged: (index, reason) {
                                 setState(() {
@@ -235,13 +252,15 @@ class _productdetail1State extends State<productdetail1> {
 
                       // ======================== Colors Data ======================
 
-                      Text("Colors : " + "  " + clrdata!.coloursdata![index1],
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                              fontFamily: "Poppins",
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 12.sp)),
+                      Text(
+                        "Colors : " + "  " + clrdata!.coloursdata![index1],
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                            fontFamily: "Poppins",
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 12.sp),
+                      ),
                       SizedBox(
                         height: 2.h,
                       ),
@@ -259,13 +278,16 @@ class _productdetail1State extends State<productdetail1> {
                                   children: [
                                     GestureDetector(
                                       onTap: () {
-                                        setState(() {
-                                          index1 = index;
-                                          cur1 = !cur1;
-                                        });
+                                        setState(
+                                          () {
+                                            index1 = index;
+                                            cur1 = !cur1;
+                                          },
+                                        );
                                         _qty.clear();
                                         index2 = 0;
                                         checkblock = true;
+                                        userapi();
                                       },
                                       child: Padding(
                                         padding: EdgeInsets.all(8.0),
@@ -339,16 +361,22 @@ class _productdetail1State extends State<productdetail1> {
                             physics: const BouncingScrollPhysics(),
                             shrinkWrap: true,
                             itemCount: (items.length),
-                            itemBuilder: (context, index3) {
+                            itemBuilder: (context, index) {
                               return Column(
                                 children: [
                                   GestureDetector(
                                     onTap: () {
                                       setState(() {
-                                        index2 = index3;
-                                        cur2 = !cur2;
-                                        _qty.clear();
+                                        index2 = index;
+
+                                        current[index2] = !current[index2];
+                                        print("current" +
+                                            current[index2].toString());
+
                                         checkblock = true;
+                                        _qty.clear();
+                                        cur2 = !cur2;
+                                        userapi();
                                       });
                                     },
                                     child: Padding(
@@ -360,24 +388,26 @@ class _productdetail1State extends State<productdetail1> {
                                         decoration: BoxDecoration(
                                           borderRadius:
                                               BorderRadius.circular(9),
-                                          color: index2 == index3
+                                          color: index2 == index
                                               ? Color.fromARGB(
                                                   55, 248, 139, 139)
                                               : Color(0xffffffff),
                                           border: Border.all(
                                               width: 2,
-                                              color: index2 == index3
+                                              color: index2 == index
                                                   ? Color.fromARGB(
                                                       255, 243, 33, 33)
                                                   : Colors.transparent),
                                         ),
                                         alignment: Alignment.center,
-                                        child: Text('${items[index3]}',
-                                            style: TextStyle(
-                                                fontFamily: "Poppins",
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 12.sp)),
+                                        child: Text(
+                                          '${items[index]}',
+                                          style: TextStyle(
+                                              fontFamily: "Poppins",
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 12.sp),
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -385,9 +415,6 @@ class _productdetail1State extends State<productdetail1> {
                               );
                             }),
                       ),
-                      // SizedBox(
-                      //   height: 1.h,
-                      // ),
 
                       // ======= stocks details ==========
 
@@ -466,13 +493,15 @@ class _productdetail1State extends State<productdetail1> {
                             height: MediaQuery.of(context).size.height * 0.08,
                             child: TextFormField(
                               validator: (value) {
-                                setState(() {
-                                  emty = value!.isEmpty;
-                                  print(value.isEmpty);
-                                });
+                                setState(
+                                  () {
+                                    emty = value!.isEmpty;
+                                    print(value.isEmpty);
+                                  },
+                                );
 
                                 if (value!.isEmpty) {
-                                 dialog1();
+                                  dialog1();
                                 }
                                 return null;
                               },
@@ -496,7 +525,7 @@ class _productdetail1State extends State<productdetail1> {
                             ),
                           ),
                           SizedBox(
-                            width: 10.w,
+                            width: 5.w,
                           ),
                           checkblock
                               ? InkWell(
@@ -506,49 +535,24 @@ class _productdetail1State extends State<productdetail1> {
                                     }
                                     if (index2 == -1) {
                                       showDialog(
-                                          context: context,
-                                          builder: (context) =>
-                                              CupertinoAlertDialog(
-                                                actions: [
-                                                  TextButton(
-                                                      onPressed: () {
-                                                        Navigator.pop(context);
-                                                      },
-                                                      child: Text(
-                                                        'Ok',
-                                                        style: TextStyle(
-                                                            color: Color(
-                                                                0xffe16e6e)),
-                                                      ))
-                                                ],
-                                                title:
-                                                    Text("Please Select Size"),
-                                              )
-                                          //     AlertDialog(
-                                          //   shape: RoundedRectangleBorder(
-                                          //     borderRadius:
-                                          //         BorderRadius.circular(10),
-                                          //   ),
-                                          //   actions: [
-                                          //     TextButton(
-                                          //       onPressed: () {
-                                          //         Navigator.pop(context);
-                                          //       },
-                                          //       child: Text(
-                                          //         'Ok',
-                                          //         style: TextStyle(
-                                          //           fontSize: 5.w,
-                                          //           color: Color(0xfff65b5b),
-                                          //         ),
-                                          //       ),
-                                          //     ),
-                                          //   ],
-                                          //   content: Text(
-                                          //     "You Did'nt Selected Size",
-                                          //     style: TextStyle(fontSize: 6.w),
-                                          //   ),
-                                          // ),
-                                          );
+                                        context: context,
+                                        builder: (context) =>
+                                            CupertinoAlertDialog(
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                              },
+                                              child: Text(
+                                                'Ok',
+                                                style: TextStyle(
+                                                    color: Color(0xffe16e6e)),
+                                              ),
+                                            ),
+                                          ],
+                                          title: Text("Please Select Size"),
+                                        ),
+                                      );
                                     } else {
                                       blockapi();
                                     }
@@ -556,19 +560,16 @@ class _productdetail1State extends State<productdetail1> {
                                   child: Container(
                                     alignment: Alignment.center,
                                     width: MediaQuery.of(context).size.width *
-                                        0.40,
+                                        0.15,
                                     height: MediaQuery.of(context).size.height *
                                         0.06,
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10),
                                       color: Color(0xfff65b5b),
                                     ),
-                                    child: Text(
-                                      'Block Item',
-                                      style: TextStyle(
-                                          color: Color(0xffececec),
-                                          fontSize: 5.2.w,
-                                          fontWeight: FontWeight.bold),
+                                    child: Icon(
+                                      Icons.block,
+                                      color: Colors.white,
                                     ),
                                   ),
                                 )
@@ -582,24 +583,49 @@ class _productdetail1State extends State<productdetail1> {
                                     unblockapi();
                                   },
                                   child: Container(
-                                    alignment: Alignment.center,
-                                    width: MediaQuery.of(context).size.width *
-                                        0.40,
-                                    height: MediaQuery.of(context).size.height *
-                                        0.06,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      color: Color(0xfff65b5b),
-                                    ),
-                                    child: Text(
-                                      'Unblock Item',
-                                      style: TextStyle(
-                                          color: Color(0xffececec),
-                                          fontSize: 5.2.w,
-                                          fontWeight: FontWeight.bold),
-                                    ),
+                                      alignment: Alignment.center,
+                                      width: MediaQuery.of(context).size.width *
+                                          0.15,
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.06,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        color: Color(0xfff65b5b),
+                                      ),
+                                      child: Icon(
+                                        Icons.circle_outlined,
+                                        color: Colors.white,
+                                      )),
+                                ),
+                          InkWell(
+                            onTap: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => Cartpage(
+                                    colorname: (clrdata?.coloursdata?[index1])
+                                        .toString(),
+                                    qty: int.parse(_qty.text),
+                                    size: clrdata!.sizes![index2].l,
+                                    name: widget.pname,
                                   ),
                                 ),
+                              );
+                            },
+                            child: Container(
+                              alignment: Alignment.center,
+                              width: MediaQuery.of(context).size.width * 0.15,
+                              height: MediaQuery.of(context).size.height * 0.06,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: Color(0xfff66a4b),
+                              ),
+                              child: Icon(
+                                Icons.shopping_cart_outlined,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
                         ],
                       ),
                       SizedBox(
@@ -653,6 +679,36 @@ class _productdetail1State extends State<productdetail1> {
     });
   }
 
+  userapi() async {
+    SharedPreferences _sharedpreferences =
+        await SharedPreferences.getInstance();
+    final Map<String, dynamic> data = {};
+    data['action'] = 'fetch_block_quantity';
+    data['d_id'] = _sharedpreferences.getString('Did').toString();
+    data['ap_id'] = widget.indew.toString();
+    data['apd_id'] = (clrdata?.apdId?[index1]).toString();
+    print((clrdata?.apdId?[index1]).toString());
+    checkInternet().then((internet) async {
+      if (internet) {
+        Authprovider().user(data).then((Response response) async {
+          print(response.statusCode);
+          print(response.body);
+          // clrdata = colorsdata.fromJson(json.decode(response.body));
+
+          if (response.statusCode == 200) {
+            print(usernew?.blockedSize?[0]);
+
+            if (kDebugMode) {}
+          } else {
+            CircularProgressIndicator();
+          }
+        });
+      } else {
+        setState(() {});
+      }
+    });
+  }
+
   blockapi() async {
     SharedPreferences _sharedpreferences =
         await SharedPreferences.getInstance();
@@ -671,50 +727,28 @@ class _productdetail1State extends State<productdetail1> {
     checkInternet().then(
       (internet) async {
         if (internet) {
-          Authprovider().block(data).then((Response response) async {
-            print(response.statusCode);
-            eror = Datamodal.fromJson(json.decode(response.body));
+          Authprovider().block(data).then(
+            (Response response) async {
+              print(response.statusCode);
+              eror = Datamodal.fromJson(json.decode(response.body));
 
-            if (response.statusCode == 200 && eror!.status == 'success') {
-              print('Blocked');
-              checkblock = !checkblock;
-              Fluttertoast.showToast(
-                msg: "Product Blocked Successfully",
-                textColor: Colors.white,
-                toastLength: Toast.LENGTH_SHORT,
-                timeInSecForIosWeb: 1,
-                gravity: ToastGravity.BOTTOM,
-                backgroundColor: Colors.indigo,
-              );
-              if (kDebugMode) {}
-            } else {
-              dialog();
-              // showDialog(
-              //   context: context,
-              //   builder: (context) => CupertinoAlertDialog(
-              //     actions: [
-              //       TextButton(
-              //           onPressed: () {
-              //             Navigator.pop(context);
-              //           },
-              //           child: Text(
-              //             'Ok',
-              //             style: TextStyle(color: Color(0xffe16e6e)),
-              //           ))
-              //     ],
-              //     content: Column(
-              //       children: [
-              //         Divider(color: Colors.black54),
-              //         Text('Availlable Quanity : ' +
-              //             ' ' +
-              //             eror!.quantity.toString()),
-              //       ],
-              //     ),
-              //     title: Text("Invalid Quantity"),
-              //   ),
-              // );
-            }
-          });
+              if (response.statusCode == 200 && eror!.status == 'success') {
+                print('Blocked');
+                checkblock = !checkblock;
+                Fluttertoast.showToast(
+                  msg: "Product Blocked Successfully",
+                  textColor: Colors.white,
+                  toastLength: Toast.LENGTH_SHORT,
+                  timeInSecForIosWeb: 1,
+                  gravity: ToastGravity.BOTTOM,
+                  backgroundColor: Colors.indigo,
+                );
+                if (kDebugMode) {}
+              } else {
+                dialog();
+              }
+            },
+          );
         } else {
           setState(() {});
         }
@@ -771,175 +805,181 @@ class _productdetail1State extends State<productdetail1> {
       color: Colors.grey.shade700,
       fontWeight: FontWeight.w400,
       fontFamily: "Poppins");
+
   dialog() {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return Dialog(
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16.0)),
-            // elevation: 0.0,
-            backgroundColor: Colors.transparent,
-            child: Container(
-              margin: EdgeInsets.only(left: 0.0, right: 0.0),
-              child: Stack(
-                children: <Widget>[
-                  Container(
-                    padding: EdgeInsets.only(
-                      top: 18.0,
-                    ),
-                    // margin: EdgeInsets.only(top: 13.0,right: 8.0),
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        shape: BoxShape.rectangle,
-                        borderRadius: BorderRadius.circular(16.0),
-                        boxShadow: <BoxShadow>[
-                          BoxShadow(
-                            color: Colors.black26,
-                            blurRadius: 0.0,
-                            offset: Offset(0.0, 0.0),
-                          ),
-                        ]),
-                    child: Container(
-                      width: 75.w,
-                      height: 15.h,
-                      child: Column(crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Image.asset(
-                            'assets/error.png',
-                            height: 6.3.h,
-                            width: 90.w,
-                          ),
-                          SizedBox(
-                            height: 2.h,
-                          ),
-                          Text(
-                            "Available Quantity : " +
-                                " " +
-                                eror!.quantity.toString(),
-                            style: TextStyle(
-                                color: Color(0xff181818),
-                                fontFamily: "poppins",
-                                fontWeight: FontWeight.w600,
-                                fontSize: 12.sp),
-                          ),
-                          SizedBox(
-                            height: 1.h,
-                          ),
-                        ],
-                      ),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
+          // elevation: 0.0,
+          backgroundColor: Colors.transparent,
+          child: Container(
+            margin: EdgeInsets.only(left: 0.0, right: 0.0),
+            child: Stack(
+              children: <Widget>[
+                Container(
+                  padding: EdgeInsets.only(
+                    top: 18.0,
+                  ),
+                  // margin: EdgeInsets.only(top: 13.0,right: 8.0),
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      shape: BoxShape.rectangle,
+                      borderRadius: BorderRadius.circular(16.0),
+                      boxShadow: <BoxShadow>[
+                        BoxShadow(
+                          color: Colors.black26,
+                          blurRadius: 0.0,
+                          offset: Offset(0.0, 0.0),
+                        ),
+                      ]),
+                  child: Container(
+                    width: 75.w,
+                    height: 15.h,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Image.asset(
+                          'assets/error.png',
+                          height: 6.3.h,
+                          width: 90.w,
+                        ),
+                        SizedBox(
+                          height: 2.h,
+                        ),
+                        Text(
+                          "Available Quantity : " +
+                              " " +
+                              eror!.quantity.toString(),
+                          style: TextStyle(
+                              color: Color(0xff181818),
+                              fontFamily: "poppins",
+                              fontWeight: FontWeight.w600,
+                              fontSize: 12.sp),
+                        ),
+                        SizedBox(
+                          height: 1.h,
+                        ),
+                      ],
                     ),
                   ),
-                  Positioned(
-                    // top: 0.h,
-                    // left: 75.w,
-                    right: 0.0,
+                ),
+                Positioned(
+                  // top: 0.h,
+                  // left: 75.w,
+                  right: 0.0,
 
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: Align(
-                        alignment: Alignment.topRight,
-                        child: CircleAvatar(
-                          radius: 14.0,
-                          backgroundColor: Colors.white,
-                          child: Icon(
-                            Icons.close,
-                            color: Color(0xff000000),
-                          ),
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Align(
+                      alignment: Alignment.topRight,
+                      child: CircleAvatar(
+                        radius: 14.0,
+                        backgroundColor: Colors.white,
+                        child: Icon(
+                          Icons.close,
+                          color: Color(0xff000000),
                         ),
                       ),
                     ),
                   ),
-                ],
-              ),
-            ));
+                ),
+              ],
+            ),
+          ),
+        );
       },
     );
   }
+
   dialog1() {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return Dialog(
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16.0)),
-            // elevation: 0.0,
-            backgroundColor: Colors.transparent,
-            child: Container(
-              margin: EdgeInsets.only(left: 0.0, right: 0.0),
-              child: Stack(
-                children: <Widget>[
-                  Container(
-                    padding: EdgeInsets.only(
-                      top: 18.0,
-                    ),
-                    // margin: EdgeInsets.only(top: 13.0,right: 8.0),
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        shape: BoxShape.rectangle,
-                        borderRadius: BorderRadius.circular(16.0),
-                        boxShadow: <BoxShadow>[
-                          BoxShadow(
-                            color: Colors.black26,
-                            blurRadius: 0.0,
-                            offset: Offset(0.0, 0.0),
-                          ),
-                        ]),
-                    child: Container(
-                      width: 75.w,
-                      height: 15.h,
-                      child: Column(crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Image.asset(
-                            'assets/error.png',
-                            height: 6.3.h,
-                            width: 90.w,
-                          ),
-                          SizedBox(
-                            height: 2.h,
-                          ),
-                          Text(
-                            'Enter Quantity To Block Product',
-                            style: TextStyle(
-                                color: Color(0xff181818),
-                                fontFamily: "poppins",
-                                fontWeight: FontWeight.w600,
-                                fontSize: 12.sp),
-                          ),
-                          SizedBox(
-                            height: 1.h,
-                          ),
-                        ],
-                      ),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
+          // elevation: 0.0,
+          backgroundColor: Colors.transparent,
+          child: Container(
+            margin: EdgeInsets.only(left: 0.0, right: 0.0),
+            child: Stack(
+              children: <Widget>[
+                Container(
+                  padding: EdgeInsets.only(
+                    top: 18.0,
+                  ),
+                  // margin: EdgeInsets.only(top: 13.0,right: 8.0),
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      shape: BoxShape.rectangle,
+                      borderRadius: BorderRadius.circular(16.0),
+                      boxShadow: <BoxShadow>[
+                        BoxShadow(
+                          color: Colors.black26,
+                          blurRadius: 0.0,
+                          offset: Offset(0.0, 0.0),
+                        ),
+                      ]),
+                  child: Container(
+                    width: 75.w,
+                    height: 15.h,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Image.asset(
+                          'assets/error.png',
+                          height: 6.3.h,
+                          width: 90.w,
+                        ),
+                        SizedBox(
+                          height: 2.h,
+                        ),
+                        Text(
+                          'Enter Quantity To Block Product',
+                          style: TextStyle(
+                              color: Color(0xff181818),
+                              fontFamily: "poppins",
+                              fontWeight: FontWeight.w600,
+                              fontSize: 12.sp),
+                        ),
+                        SizedBox(
+                          height: 1.h,
+                        ),
+                      ],
                     ),
                   ),
-                  Positioned(
-                    // top: 0.h,
-                    // left: 75.w,
-                    right: 0.0,
+                ),
+                Positioned(
+                  // top: 0.h,
+                  // left: 75.w,
+                  right: 0.0,
 
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: Align(
-                        alignment: Alignment.topRight,
-                        child: CircleAvatar(
-                          radius: 14.0,
-                          backgroundColor: Colors.white,
-                          child: Icon(
-                            Icons.close,
-                            color: Color(0xff000000),
-                          ),
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Align(
+                      alignment: Alignment.topRight,
+                      child: CircleAvatar(
+                        radius: 14.0,
+                        backgroundColor: Colors.white,
+                        child: Icon(
+                          Icons.close,
+                          color: Color(0xff000000),
                         ),
                       ),
                     ),
                   ),
-                ],
-              ),
-            ));
+                ),
+              ],
+            ),
+          ),
+        );
       },
     );
   }
