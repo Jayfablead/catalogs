@@ -40,6 +40,7 @@ class Sachen {
 class _productdetail1State extends State<productdetail1> {
   int index1 = 0;
   int index2 = 0;
+  String? siz;
   bool emty = true;
   bool checkblock = true;
   final _formKey = GlobalKey<FormState>();
@@ -368,6 +369,7 @@ class _productdetail1State extends State<productdetail1> {
                                     onTap: () {
                                       setState(() {
                                         index2 = index;
+                                         siz = items[index2];
 
                                         current[index2] = !current[index2];
                                         print("current" +
@@ -600,17 +602,15 @@ class _productdetail1State extends State<productdetail1> {
                                 ),
                           InkWell(
                             onTap: () {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) => Cartpage(
-                                    colorname: (clrdata?.coloursdata?[index1])
-                                        .toString(),
-                                    qty: int.parse(_qty.text),
-                                    size: clrdata!.sizes![index2].l,
-                                    name: widget.pname,
-                                  ),
-                                ),
-                              );
+                              if (_qty.text.isEmpty) {
+                                dialog2();
+                              } else {
+
+                                blockapi1();
+
+
+
+                              }
                             },
                             child: Container(
                               alignment: Alignment.center,
@@ -743,6 +743,55 @@ class _productdetail1State extends State<productdetail1> {
                   gravity: ToastGravity.BOTTOM,
                   backgroundColor: Colors.indigo,
                 );
+                if (kDebugMode) {}
+              } else {
+                dialog();
+              }
+            },
+          );
+        } else {
+          setState(() {});
+        }
+      },
+    );
+  }
+  blockapi1() async {
+    SharedPreferences _sharedpreferences =
+        await SharedPreferences.getInstance();
+    final Map<String, String> data = {};
+
+    data['d_id'] = _sharedpreferences.getString('Did').toString();
+    data['ap_id'] = widget.indew.toString();
+    data['apd_id'] = (clrdata?.apdId?[index1]).toString();
+    data['product_size'] = items[index2].toLowerCase() + '_block';
+    data['block_quantity'] = _qty.text.trim().toString();
+
+    data['action'] = 'block_product';
+
+    print(data);
+
+    checkInternet().then(
+      (internet) async {
+        if (internet) {
+          Authprovider().block(data).then(
+            (Response response) async {
+              print(response.statusCode);
+              eror = Datamodal.fromJson(json.decode(response.body));
+
+              if (response.statusCode == 200 && eror!.status == 'success') {
+                print('Blocked');
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => Cartpage(
+                      colorname: (clrdata?.coloursdata?[index1])
+                          .toString(),
+                      qty: int.parse(_qty.text),
+                      size:siz,
+                      name: widget.pname,
+                    ),
+                  ),
+                );
+
                 if (kDebugMode) {}
               } else {
                 dialog();
@@ -946,6 +995,97 @@ class _productdetail1State extends State<productdetail1> {
                               fontFamily: "poppins",
                               fontWeight: FontWeight.w600,
                               fontSize: 12.sp),
+                        ),
+                        SizedBox(
+                          height: 1.h,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Positioned(
+                  // top: 0.h,
+                  // left: 75.w,
+                  right: 0.0,
+
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Align(
+                      alignment: Alignment.topRight,
+                      child: CircleAvatar(
+                        radius: 14.0,
+                        backgroundColor: Colors.white,
+                        child: Icon(
+                          Icons.close,
+                          color: Color(0xff000000),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  dialog2() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
+          // elevation: 0.0,
+          backgroundColor: Colors.transparent,
+          child: Container(
+            margin: EdgeInsets.only(left: 0.0, right: 0.0),
+            child: Stack(
+              children: <Widget>[
+                Container(
+                  padding: EdgeInsets.only(
+                    top: 18.0,
+                  ),
+                  // margin: EdgeInsets.only(top: 13.0,right: 8.0),
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      shape: BoxShape.rectangle,
+                      borderRadius: BorderRadius.circular(16.0),
+                      boxShadow: <BoxShadow>[
+                        BoxShadow(
+                          color: Colors.black26,
+                          blurRadius: 0.0,
+                          offset: Offset(0.0, 0.0),
+                        ),
+                      ]),
+                  child: Container(
+                    width: 75.w,
+                    height: 15.h,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Image.asset(
+                          'assets/error.png',
+                          height: 6.3.h,
+                          width: 90.w,
+                        ),
+                        SizedBox(
+                          height: 2.h,
+                        ),
+                        Padding(
+                          padding:  EdgeInsets.only(left: 10,right: 10),
+                          child: Text(
+                            'You Have to add Quantity to Add This Product to Cart',
+                            style: TextStyle(
+                                color: Color(0xff181818),
+                                fontFamily: "poppins",
+                                fontWeight: FontWeight.w600,
+                                fontSize: 12.sp),
+                          ),
                         ),
                         SizedBox(
                           height: 1.h,

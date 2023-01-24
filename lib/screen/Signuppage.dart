@@ -25,10 +25,10 @@ class Signuppage extends StatefulWidget {
 class _SignuppageState extends State<Signuppage> {
   final GlobalKey<ScaffoldState> _scaffoldState = GlobalKey<ScaffoldState>();
   final TextEditingController _fname = TextEditingController();
-  final TextEditingController _lname = TextEditingController();
-  final TextEditingController _confirm = TextEditingController();
   final TextEditingController _phone = TextEditingController();
   final TextEditingController _email = TextEditingController();
+  final TextEditingController _lname = TextEditingController();
+  final TextEditingController _confirm = TextEditingController();
   final TextEditingController _password = TextEditingController();
   bool select = false;
   bool isLoading = false;

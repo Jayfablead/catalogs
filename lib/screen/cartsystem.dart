@@ -1,3 +1,6 @@
+import 'package:catalogs/screen/checkoutPage.dart';
+import 'package:catalogs/screen/detailsPage.dart';
+import 'package:catalogs/utils/const.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
@@ -14,9 +17,13 @@ class Cartpage extends StatefulWidget {
   State<Cartpage> createState() => _CartpageState();
 }
 
+String img =
+    'https://5.imimg.com/data5/LG/AM/OW/SELLER-31619481/plain-t-shirt-500x500.jpeg';
+
 class _CartpageState extends State<Cartpage> {
   @override
   Widget build(BuildContext context) {
+
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -53,7 +60,7 @@ class _CartpageState extends State<Cartpage> {
                 ),
                 Expanded(
                   child: ListView.builder(
-                    itemCount: 10,
+                    itemCount: 1,
                     itemBuilder: (context, index) {
                       return Padding(
                         padding: EdgeInsets.symmetric(vertical: 6),
@@ -69,7 +76,7 @@ class _CartpageState extends State<Cartpage> {
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(10),
                                 child: Image.network(
-                                  'https://5.imimg.com/data5/LG/AM/OW/SELLER-31619481/plain-t-shirt-500x500.jpeg',
+                                  img,
                                   height: 12.h,
                                 ),
                               ),
@@ -112,6 +119,13 @@ class _CartpageState extends State<Cartpage> {
                                   SizedBox(
                                     height: 1.h,
                                   ),
+                                  // Text(
+                                  //   'Qunatity :' + ' ' + widget.qty!.toString(),
+                                  //   style: TextStyle(
+                                  //       fontWeight: FontWeight.w600,
+                                  //       fontFamily: "Poppins",
+                                  //       color: Colors.black),
+                                  // ),
                                   Row(
                                     children: [
                                       Text(
@@ -150,7 +164,7 @@ class _CartpageState extends State<Cartpage> {
                                       ),
                                       SizedBox(width: 3.w),
                                       Text(
-                                        widget.qty!.toInt().toString(),
+                                        widget.qty.toString(),
                                         style: TextStyle(
                                             fontWeight: FontWeight.w600,
                                             fontFamily: "Poppins",
@@ -160,7 +174,8 @@ class _CartpageState extends State<Cartpage> {
                                       InkWell(
                                         onTap: () {
                                           setState(() {
-                                            widget.qty = widget.qty! - 1;
+                                            if(widget.qty! != 0){widget.qty = widget.qty! - 1;}
+
                                           });
                                         },
                                         child: Container(
@@ -198,7 +213,18 @@ class _CartpageState extends State<Cartpage> {
                   height: 0.7.h,
                 ),
                 InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => DetailsPage(
+                            size: widget.size,
+                            colorname: widget.colorname,
+                            name: widget.name,
+                            qty: widget.qty,
+                            img: img),
+                      ),
+                    );
+                  },
                   child: Container(
                       alignment: Alignment.center,
                       width: MediaQuery.of(context).size.width * 0.40,
@@ -208,7 +234,7 @@ class _CartpageState extends State<Cartpage> {
                         color: Color(0xfff66a4b),
                       ),
                       child: Text(
-                        'Submit',
+                        'Next',
                         style: TextStyle(
                             fontSize: 4.w,
                             fontWeight: FontWeight.w600,
@@ -226,4 +252,94 @@ class _CartpageState extends State<Cartpage> {
       ),
     );
   }
+  dialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape:
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
+          // elevation: 0.0,
+          backgroundColor: Colors.transparent,
+          child: Container(
+            margin: EdgeInsets.only(left: 0.0, right: 0.0),
+            child: Stack(
+              children: <Widget>[
+                Container(
+                  padding: EdgeInsets.only(
+                    top: 18.0,
+                  ),
+                  // margin: EdgeInsets.only(top: 13.0,right: 8.0),
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      shape: BoxShape.rectangle,
+                      borderRadius: BorderRadius.circular(16.0),
+                      boxShadow: <BoxShadow>[
+                        BoxShadow(
+                          color: Colors.black26,
+                          blurRadius: 0.0,
+                          offset: Offset(0.0, 0.0),
+                        ),
+                      ]),
+                  child: Container(
+                    width: 75.w,
+                    height: 15.h,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Image.asset(
+                          'assets/error.png',
+                          height: 6.3.h,
+                          width: 90.w,
+                        ),
+                        SizedBox(
+                          height: 2.h,
+                        ),
+                        Text(
+                          "Available Quantity : " +
+                              " " +
+                              eror!.quantity.toString(),
+                          style: TextStyle(
+                              color: Color(0xff181818),
+                              fontFamily: "poppins",
+                              fontWeight: FontWeight.w600,
+                              fontSize: 12.sp),
+                        ),
+                        SizedBox(
+                          height: 1.h,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Positioned(
+                  // top: 0.h,
+                  // left: 75.w,
+                  right: 0.0,
+
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Align(
+                      alignment: Alignment.topRight,
+                      child: CircleAvatar(
+                        radius: 14.0,
+                        backgroundColor: Colors.white,
+                        child: Icon(
+                          Icons.close,
+                          color: Color(0xff000000),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
 }
