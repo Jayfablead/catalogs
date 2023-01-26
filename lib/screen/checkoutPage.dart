@@ -1,5 +1,14 @@
+import 'dart:convert';
+
+import 'package:catalogs/provider/authprovider.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
+
+import '../modal/errmodal.dart';
+import '../utils/const.dart';
 
 class CheckoutPage extends StatefulWidget {
   String? colorname;
@@ -217,4 +226,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
       ),
     );
   }
+
+
 }

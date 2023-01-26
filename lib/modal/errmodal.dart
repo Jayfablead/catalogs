@@ -1,6 +1,6 @@
 class Datamodal {
   String? status;
-  String? quantity;
+  int? quantity;
 
   Datamodal({this.status, this.quantity});
 

@@ -369,7 +369,7 @@ class _productdetail1State extends State<productdetail1> {
                                     onTap: () {
                                       setState(() {
                                         index2 = index;
-                                         siz = items[index2];
+                                        siz = items[index2];
 
                                         current[index2] = !current[index2];
                                         print("current" +
@@ -605,11 +605,8 @@ class _productdetail1State extends State<productdetail1> {
                               if (_qty.text.isEmpty) {
                                 dialog2();
                               } else {
-
+                                clrdata!.sizes![index2].toString();
                                 blockapi1();
-
-
-
                               }
                             },
                             child: Container(
@@ -755,6 +752,7 @@ class _productdetail1State extends State<productdetail1> {
       },
     );
   }
+
   blockapi1() async {
     SharedPreferences _sharedpreferences =
         await SharedPreferences.getInstance();
@@ -783,11 +781,12 @@ class _productdetail1State extends State<productdetail1> {
                 Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) => Cartpage(
-                      colorname: (clrdata?.coloursdata?[index1])
-                          .toString(),
+                      colorname: (clrdata?.coloursdata?[index1]).toString(),
                       qty: int.parse(_qty.text),
-                      size:siz,
+                      size: siz,
                       name: widget.pname,
+                      apdId: (clrdata?.apdId?[index1]).toString(),
+                      apId: widget.indew.toString(),
                     ),
                   ),
                 );
@@ -1077,7 +1076,7 @@ class _productdetail1State extends State<productdetail1> {
                           height: 2.h,
                         ),
                         Padding(
-                          padding:  EdgeInsets.only(left: 10,right: 10),
+                          padding: EdgeInsets.only(left: 10, right: 10),
                           child: Text(
                             'You Have to add Quantity to Add This Product to Cart',
                             style: TextStyle(

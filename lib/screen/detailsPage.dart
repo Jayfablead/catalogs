@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:catalogs/screen/checkoutPage.dart';
+import 'package:catalogs/utils/const.dart';
 import 'package:catalogs/widgets/textfields.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
@@ -37,14 +38,14 @@ class _DetailsPageState extends State<DetailsPage> {
   @override
   void initState() {
     super.initState();
-    _fname.clear();
-    _phone.clear();
-    _email.clear();
-    _pincode.clear();
-    _add.clear();
-    _add1.clear();
-    _state.clear();
-    _city.clear();
+    getdata();
+  }
+
+  getdata() {
+    _fname.text = '${userData?.logindata?.fname.toString()} ' +
+        '${userData?.logindata?.lname.toString()} ';
+    _email.text = '${userData?.logindata?.emailId.toString()} ';
+    _phone.text = '${userData?.logindata?.mobileNo.toString()} ';
   }
 
   @override
@@ -171,49 +172,52 @@ class _DetailsPageState extends State<DetailsPage> {
                                         SizedBox(
                                           width: 3.w,
                                         ),
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceAround,
-                                          children: [
-                                            Text(
-                                              'Product : ' +
-                                                  ' ' +
-                                                  widget.name.toString(),
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.w600,
-                                                  fontFamily: "Poppins",
-                                                  color: Colors.black),
-                                            ),
-                                            Text(
-                                              'Colour : ' +
-                                                  ' ' +
-                                                  widget.colorname.toString(),
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.w600,
-                                                  fontFamily: "Poppins",
-                                                  color: Colors.black),
-                                            ),
-                                            Text(
-                                              'Qty : ' +
-                                                  ' ' +
-                                                  widget.qty.toString(),
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.w600,
-                                                  fontFamily: "Poppins",
-                                                  color: Colors.black),
-                                            ),
-                                            Text(
-                                              'Size : ' +
-                                                  ' ' +
-                                                  widget.size.toString(),
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.w600,
-                                                  fontFamily: "Poppins",
-                                                  color: Colors.black),
-                                            ),
-                                          ],
+                                        Container(width: 50.w,
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceAround,
+                                            children: [
+                                              Text(
+                                                'Product : ' +
+                                                    ' ' +
+                                                    widget.name.toString(),
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.w600,
+                                                    fontFamily: "Poppins",
+                                                    color: Colors.black),
+                                              ),
+                                              Text(
+                                                'Colour : ' +
+                                                    ' ' +
+                                                    widget.colorname.toString(),maxLines: 2,
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.w600,
+
+                                                    fontFamily: "Poppins",
+                                                    color: Colors.black),
+                                              ),
+                                              Text(
+                                                'Qty : ' +
+                                                    ' ' +
+                                                    widget.qty.toString(),
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.w600,
+                                                    fontFamily: "Poppins",
+                                                    color: Colors.black),
+                                              ),
+                                              Text(
+                                                'Size : ' +
+                                                    ' ' +
+                                                    widget.size.toString(),
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.w600,
+                                                    fontFamily: "Poppins",
+                                                    color: Colors.black),
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                       ],
                                     ),
@@ -223,22 +227,55 @@ class _DetailsPageState extends State<DetailsPage> {
                                   ),
                                   Align(
                                     alignment: Alignment.centerRight,
-                                    child: TextButton(
-                                        onPressed: () {
-                                          setState(() {
-                                            selectindex = true;
-                                            selectindex1 = true;
-                                          });
-                                        },
+                                    child: InkWell(
+                                      onTap: () {
+                                        setState(() {
+                                          selectindex = true;
+                                          selectindex1 = false;
+                                        });
+                                      },
+                                      child: Container(
+                                        alignment: Alignment.center,
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.15,
+                                        height:
+                                            MediaQuery.of(context).size.height *
+                                                0.05,
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          color: Color(0xfff66a4b),
+                                        ),
                                         child: Text(
                                           'Next',
                                           style: TextStyle(
                                               fontWeight: FontWeight.w600,
                                               fontFamily: "Poppins",
-                                              fontSize: 4.w,
-                                              color: Colors.deepOrange),
-                                        )),
-                                  )
+                                              color: Colors.black),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(height: 1.h),
+                                  // Align(
+                                  //   alignment: Alignment.centerRight,
+                                  //   child: TextButton(
+                                  //       onPressed: () {
+                                  //         setState(() {
+                                  //           selectindex = true;
+                                  //           selectindex1 = true;
+                                  //         });
+                                  //       },
+                                  //       child: Text(
+                                  //         'Next',
+                                  //         style: TextStyle(
+                                  //             fontWeight: FontWeight.w600,
+                                  //             fontFamily: "Poppins",
+                                  //             fontSize: 4.w,
+                                  //             color: Colors.deepOrange),
+                                  //       )),
+                                  // )
                                 ],
                               ),
                             )
@@ -286,7 +323,7 @@ class _DetailsPageState extends State<DetailsPage> {
                                   Text(list[1]),
                                 ],
                               ),
-                              (selectindex1 == false)
+                              (selectindex1 == true)
                                   ? Transform.rotate(
                                       angle: -90 * pi / 180,
                                       child: Icon(
@@ -308,7 +345,7 @@ class _DetailsPageState extends State<DetailsPage> {
                       SizedBox(
                         height: 1.h,
                       ),
-                      (selectindex1 == true)
+                      (selectindex1 == false)
                           ? Container(
                               color: Colors.white,
                               padding: EdgeInsets.symmetric(horizontal: 5.w),
