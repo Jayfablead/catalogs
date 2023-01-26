@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:catalogs/screen/checkoutPage.dart';
+import 'package:catalogs/screen/thankYouPage.dart';
 import 'package:catalogs/utils/const.dart';
 import 'package:catalogs/widgets/textfields.dart';
 import 'package:flutter/material.dart';
@@ -556,7 +557,9 @@ class _DetailsPageState extends State<DetailsPage> {
                   ),
                   InkWell(
                     onTap: () {
-                      if (_formKey.currentState!.validate()) {}
+                      if (_formKey.currentState!.validate()) {
+                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => ThankyouPage(),));
+                      }
                     },
                     child: Container(
                       alignment: Alignment.center,
