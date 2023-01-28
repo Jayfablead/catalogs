@@ -605,8 +605,7 @@ class _productdetail1State extends State<productdetail1> {
                               if (_qty.text.isEmpty) {
                                 dialog2();
                               } else {
-                                clrdata!.sizes![index2].toString();
-                                blockapi1();
+                                cartapi();
                               }
                             },
                             child: Container(
@@ -848,6 +847,53 @@ class _productdetail1State extends State<productdetail1> {
     );
   }
 
+  cartapi() async {
+    SharedPreferences _sharedpreferences =
+        await SharedPreferences.getInstance();
+    final Map<String, String> data = {};
+
+    data['d_id'] = _sharedpreferences.getString('Did').toString();
+    data['ap_id'] = widget.indew.toString();
+    data['apd_id'] = (clrdata?.apdId?[index1]).toString();
+    data['product_size'] = items[index2].toLowerCase();
+    data['cart_quantity'] = _qty.text.trim().toString();
+
+    data['action'] = 'add_to_cart';
+
+    print(data);
+
+    checkInternet().then(
+      (internet) async {
+        if (internet) {
+          Authprovider().block(data).then(
+            (Response response) async {
+              print(response.body);
+
+              if (response.statusCode == 200) {
+                cartdialog();
+                // print('Added to Cart');
+                // Fluttertoast.showToast(
+                //   msg: "Product Added To Your Cart",
+                //   textColor: Colors.white,
+                //   toastLength: Toast.LENGTH_SHORT,
+                //   timeInSecForIosWeb: 1,
+                //   gravity: ToastGravity.BOTTOM,
+                //   backgroundColor: Colors.indigo,
+                // );
+
+                if (kDebugMode) {}
+              } else {
+                acartdialog();
+              }
+            },
+          );
+        } else {
+          setState(() {});
+        }
+      },
+    );
+  }
+
   TextStyle textstyle = TextStyle(
       fontSize: 11.sp,
       color: Colors.grey.shade700,
@@ -909,6 +955,207 @@ class _productdetail1State extends State<productdetail1> {
                         ),
                         SizedBox(
                           height: 1.h,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Positioned(
+                  // top: 0.h,
+                  // left: 75.w,
+                  right: 0.0,
+
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Align(
+                      alignment: Alignment.topRight,
+                      child: CircleAvatar(
+                        radius: 14.0,
+                        backgroundColor: Colors.white,
+                        child: Icon(
+                          Icons.close,
+                          color: Color(0xff000000),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  acartdialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
+          // elevation: 0.0,
+          backgroundColor: Colors.transparent,
+          child: Container(
+            margin: EdgeInsets.only(left: 0.0, right: 0.0),
+            child: Stack(
+              children: <Widget>[
+                Container(
+                  padding: EdgeInsets.only(
+                    top: 18.0,
+                  ),
+                  // margin: EdgeInsets.only(top: 13.0,right: 8.0),
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      shape: BoxShape.rectangle,
+                      borderRadius: BorderRadius.circular(16.0),
+                      boxShadow: <BoxShadow>[
+                        BoxShadow(
+                          color: Colors.black26,
+                          blurRadius: 0.0,
+                          offset: Offset(0.0, 0.0),
+                        ),
+                      ]),
+                  child: Container(
+                    padding: EdgeInsets.only(left: 10, right: 10),
+                    width: 75.w,
+                    height: 15.h,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Image.asset(
+                          'assets/error.png',
+                          height: 6.3.h,
+                          width: 90.w,
+                        ),
+                        SizedBox(
+                          height: 2.h,
+                        ),
+                        Text(
+                          "Product Is Already Added To Your Cart",
+                          style: TextStyle(
+                              color: Color(0xff181818),
+                              fontFamily: "poppins",
+                              fontWeight: FontWeight.w600,
+                              fontSize: 12.sp),
+                        ),
+                        SizedBox(
+                          height: 1.h,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Positioned(
+                  // top: 0.h,
+                  // left: 75.w,
+                  right: 0.0,
+
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Align(
+                      alignment: Alignment.topRight,
+                      child: CircleAvatar(
+                        radius: 14.0,
+                        backgroundColor: Colors.white,
+                        child: Icon(
+                          Icons.close,
+                          color: Color(0xff000000),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  cartdialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
+          // elevation: 0.0,
+          backgroundColor: Colors.transparent,
+          child: Container(
+            margin: EdgeInsets.only(left: 0.0, right: 0.0),
+            child: Stack(
+              children: <Widget>[
+                Container(
+                  padding: EdgeInsets.only(
+                    top: 18.0,
+                  ),
+                  // margin: EdgeInsets.only(top: 13.0,right: 8.0),
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      shape: BoxShape.rectangle,
+                      borderRadius: BorderRadius.circular(16.0),
+                      boxShadow: <BoxShadow>[
+                        BoxShadow(
+                          color: Colors.black26,
+                          blurRadius: 0.0,
+                          offset: Offset(0.0, 0.0),
+                        ),
+                      ]),
+                  child: Container(
+                    padding: EdgeInsets.only(left: 10,right: 10),
+                    width: 75.w,
+                    height: 22.h,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Image.asset(
+                          'assets/done.png',
+                          height: 6.3.h,
+                          width: 90.w,
+                        ),
+                        SizedBox(
+                          height: 2.h,
+                        ),
+                        Text(
+                          "Product Added To Your Cart Successfully",
+                          style: TextStyle(
+                              color: Color(0xff181818),
+                              fontFamily: "poppins",
+                              fontWeight: FontWeight.w600,
+                              fontSize: 12.sp),
+                        ),
+                        SizedBox(
+                          height: 1.h,
+                        ),
+                        InkWell(
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => Cartpage(),
+                              ),
+                            );
+                          },
+                          child: Container(
+                            alignment: Alignment.center,
+                            width: MediaQuery.of(context).size.width * 0.30,
+                            height: MediaQuery.of(context).size.height * 0.06,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Color(0xfff66a4b),
+                            ),
+                            child: Text('View Cart',style: TextStyle(
+                                color: Color(0xff181818),
+                                fontFamily: "poppins",
+                                fontWeight: FontWeight.w600,
+                                fontSize: 12.sp),),
+                          ),
                         ),
                       ],
                     ),

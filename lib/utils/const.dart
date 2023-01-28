@@ -1,4 +1,5 @@
 
+import 'package:catalogs/modal/cartmodal.dart';
 import 'package:catalogs/modal/errmodal.dart';
 import 'package:catalogs/modal/userclass.dart';
 import 'package:catalogs/provider/updateprovider.dart';
@@ -23,6 +24,7 @@ updateddata? newData;
 colorsdata? clrdata;
 Prodmodal? prods;
 Datamodal? eror;
+CartModal? cart;
 userdatamodal? usernew;
 
 

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:catalogs/modal/cartmodal.dart';
 import 'package:catalogs/screen/checkoutPage.dart';
 import 'package:catalogs/screen/detailsPage.dart';
 import 'package:catalogs/utils/const.dart';
@@ -20,7 +21,14 @@ class Cartpage extends StatefulWidget {
   String? apId;
   String? apdId;
 
-  Cartpage({Key? key, this.colorname, this.size, this.qty, this.name,this.apdId,this.apId})
+  Cartpage(
+      {Key? key,
+      this.colorname,
+      this.size,
+      this.qty,
+      this.name,
+      this.apdId,
+      this.apId})
       : super(key: key);
 
   @override
@@ -31,6 +39,13 @@ String img =
     'https://5.imimg.com/data5/LG/AM/OW/SELLER-31619481/plain-t-shirt-500x500.jpeg';
 
 class _CartpageState extends State<Cartpage> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    fetchcartapi();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -69,151 +84,236 @@ class _CartpageState extends State<Cartpage> {
                 ),
                 Expanded(
                   child: ListView.builder(
-                    itemCount: 1,
+                    itemCount: cart?.cartProducts?.length,
                     itemBuilder: (context, index) {
                       return Padding(
                         padding: EdgeInsets.symmetric(vertical: 6),
                         child: Container(
-                          height: 19.h,
+                          height: 23.h,
                           decoration: BoxDecoration(
                             color: Color(0xffe3e3e3),
                             borderRadius: BorderRadius.circular(10),
                           ),
-                          child: Row(
+                          child: Column(
                             children: [
-                              SizedBox(width: 1.3.w),
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(10),
-                                child: Image.network(
-                                  img,
-                                  height: 12.h,
+                              Align(
+                                alignment: Alignment.centerRight,
+                                child: IconButton(
+                                  onPressed: () {},
+                                  icon: Icon(Icons.close),
                                 ),
                               ),
-                              SizedBox(
-                                width: 6.w,
-                              ),
-                              Container(
-                                width: MediaQuery.of(context).size.width*0.6,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    SizedBox(
-                                      height: 1.h,
+                              Row(
+                                children: [
+                                  SizedBox(width: 1.3.w),
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(10),
+                                    child: Image.network(
+                                      img,
+                                      height: 12.h,
                                     ),
-                                    Text(
-                                      'Name :' + ' ' + widget.name!,
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w600,
-                                          fontFamily: "Poppins",
-                                          color: Colors.black),
-                                    ),
-                                    SizedBox(
-                                      height: 1.h,
-                                    ),
-                                    Text(
-                                      'Color :' + ' ' + widget.colorname!,maxLines: 2,
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w600,
-                                          fontFamily: "Poppins",
-                                          color: Colors.black),
-                                    ),
-                                    SizedBox(
-                                      height: 1.h,
-                                    ),
-                                    Text(
-                                      'Size :' + ' ' + widget.size!,
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w600,
-                                          fontFamily: "Poppins",
-                                          color: Colors.black),
-                                    ),
-                                    SizedBox(
-                                      height: 1.h,
-                                    ),
-                                    // Text(
-                                    //   'Qunatity :' + ' ' + widget.qty!.toString(),
-                                    //   style: TextStyle(
-                                    //       fontWeight: FontWeight.w600,
-                                    //       fontFamily: "Poppins",
-                                    //       color: Colors.black),
-                                    // ),
-                                    Row(
+                                  ),
+                                  SizedBox(
+                                    width: 6.w,
+                                  ),
+                                  Container(
+                                    width:
+                                        MediaQuery.of(context).size.width * 0.6,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
+                                        SizedBox(
+                                          height: 1.h,
+                                        ),
                                         Text(
-                                          'Qty :',
+                                          'Name :' +
+                                              ' ' +
+                                              cart!
+                                                  .cartProducts![index].prodName
+                                                  .toString(),
                                           style: TextStyle(
                                               fontWeight: FontWeight.w600,
                                               fontFamily: "Poppins",
                                               color: Colors.black),
                                         ),
-                                        SizedBox(width: 3.w),
-                                        InkWell(
-                                          onTap: () {
-                                            setState(() {
-                                              widget.qty = widget.qty! + 1;
-                                            });
-                                          },
-                                          child: Container(
-                                            alignment: Alignment.center,
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                0.08,
-                                            height: MediaQuery.of(context)
-                                                    .size
-                                                    .height *
-                                                0.04,
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                              color: Color(0xfff66a4b),
-                                            ),
-                                            child: Icon(
-                                              Icons.add,
-                                            ),
-                                          ),
+                                        SizedBox(
+                                          height: 1.h,
                                         ),
-                                        SizedBox(width: 3.w),
                                         Text(
-                                          widget.qty.toString(),
+                                          'Color :' +
+                                              ' ' +
+                                              cart!.cartProducts![index]
+                                                  .apColorName
+                                                  .toString(),
+                                          maxLines: 2,
                                           style: TextStyle(
                                               fontWeight: FontWeight.w600,
                                               fontFamily: "Poppins",
                                               color: Colors.black),
                                         ),
-                                        SizedBox(width: 3.w),
-                                        InkWell(
-                                          onTap: () {
-                                            setState(() {
-                                              if (widget.qty! != 0) {
-                                                widget.qty = widget.qty! - 1;
-                                              }
-                                            });
-                                          },
-                                          child: Container(
-                                            alignment: Alignment.center,
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                0.08,
-                                            height: MediaQuery.of(context)
-                                                    .size
-                                                    .height *
-                                                0.04,
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                              color: Color(0xfff66a4b),
-                                            ),
-                                            child: Icon(
-                                              Icons.remove,
-                                            ),
-                                          ),
+                                        SizedBox(
+                                          height: 1.h,
                                         ),
+                                        Text(
+                                          'Size :' +
+                                              ' ' +
+                                              cart!
+                                                  .cartProducts![index].prodSize
+                                                  .toString(),
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w600,
+                                              fontFamily: "Poppins",
+                                              color: Colors.black),
+                                        ),
+                                        SizedBox(
+                                          height: 1.h,
+                                        ),
+                                        // Text(
+                                        //   'Qunatity :' + ' ' + widget.qty!.toString(),
+                                        //   style: TextStyle(
+                                        //       fontWeight: FontWeight.w600,
+                                        //       fontFamily: "Poppins",
+                                        //       color: Colors.black),
+                                        // ),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              'Qty :',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w600,
+                                                  fontFamily: "Poppins",
+                                                  color: Colors.black),
+                                            ),
+                                            SizedBox(width: 3.w),
+                                            InkWell(
+                                              onTap: () {
+                                                setState(() {
+                                                  if (cart!.cartProducts![index]
+                                                          .cartQuantity! <=
+                                                      cart!.cartProducts![index]
+                                                          .maxQuantity!) {
+                                                    cart!.cartProducts![index]
+                                                        .cartQuantity = cart!
+                                                            .cartProducts![
+                                                                index]
+                                                            .cartQuantity! +
+                                                        1;
+                                                  }
+                                                });
+                                              },
+                                              child: Container(
+                                                alignment: Alignment.center,
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    0.08,
+                                                height: MediaQuery.of(context)
+                                                        .size
+                                                        .height *
+                                                    0.04,
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                  color: Color(0xfff66a4b),
+                                                ),
+                                                child: Icon(
+                                                  Icons.add,
+                                                ),
+                                              ),
+                                            ),
+                                            SizedBox(width: 3.w),
+                                            Text(
+                                              cart!.cartProducts![index]
+                                                  .cartQuantity
+                                                  .toString(),
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w600,
+                                                  fontFamily: "Poppins",
+                                                  color: Colors.black),
+                                            ),
+                                            SizedBox(width: 3.w),
+                                            InkWell(
+                                              onTap: () {
+                                                // setState(() {
+                                                //   if (widget.qty! != 0) {
+                                                //     widget.qty = widget.qty! - 1;
+                                                //   }
+                                                // });
+                                                setState(() {
+                                                  if (cart!.cartProducts![index]
+                                                          .cartQuantity! !=
+                                                      1) {
+                                                    cart!.cartProducts![index]
+                                                        .cartQuantity = cart!
+                                                            .cartProducts![
+                                                                index]
+                                                            .cartQuantity! -
+                                                        1;
+                                                  }
+                                                });
+                                              },
+                                              child: Container(
+                                                alignment: Alignment.center,
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    0.08,
+                                                height: MediaQuery.of(context)
+                                                        .size
+                                                        .height *
+                                                    0.04,
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                  color: Color(0xfff66a4b),
+                                                ),
+                                                child: Icon(
+                                                  Icons.remove,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBox(
+                                          height: 1.5.h,
+                                        ),
+                                        // Padding(
+                                        //   padding:  EdgeInsets.only(right: 10),
+                                        //   child: Align(
+                                        //     alignment: Alignment.centerRight,
+                                        //     child: InkWell(
+                                        //       child: Container(alignment: Alignment.center,
+                                        //         width: MediaQuery.of(context)
+                                        //             .size
+                                        //             .width *
+                                        //             0.21,
+                                        //         height: MediaQuery.of(context)
+                                        //             .size
+                                        //             .height *
+                                        //             0.04,
+                                        //         decoration: BoxDecoration(
+                                        //           borderRadius:
+                                        //           BorderRadius.circular(10),
+                                        //           color: Color(0xfff66a4b),
+                                        //         ),
+                                        //         child: Text(
+                                        //           'Remove',
+                                        //           style: TextStyle(
+                                        //             fontSize: 4.w,
+                                        //             fontWeight: FontWeight.w600,
+                                        //             fontFamily: "Poppins",
+                                        //             color: Colors.white,
+                                        //           ),
+                                        //         ),
+                                        //       ),
+                                        //     ),
+                                        //   ),
+                                        // ),
                                       ],
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
                             ],
                           ),
@@ -225,35 +325,59 @@ class _CartpageState extends State<Cartpage> {
                 SizedBox(
                   height: 0.7.h,
                 ),
-                InkWell(
-                  onTap: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => DetailsPage(
-                            size: widget.size,
-                            colorname: widget.colorname,
-                            name: widget.name,
-                            qty: widget.qty,
-                            img: img),
-                      ),
-                    );
-                  },
-                  child: Container(
-                      alignment: Alignment.center,
-                      width: MediaQuery.of(context).size.width * 0.40,
-                      height: MediaQuery.of(context).size.height * 0.06,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Color(0xfff66a4b),
-                      ),
-                      child: Text(
-                        'Next',
-                        style: TextStyle(
-                            fontSize: 4.w,
-                            fontWeight: FontWeight.w600,
-                            fontFamily: "Poppins",
-                            color: Colors.black),
-                      )),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    InkWell(
+                      onTap: () {},
+                      child: Container(
+                          alignment: Alignment.center,
+                          width: MediaQuery.of(context).size.width * 0.40,
+                          height: MediaQuery.of(context).size.height * 0.06,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: Color(0xfff66a4b),
+                          ),
+                          child: Text(
+                            'Update',
+                            style: TextStyle(
+                                fontSize: 4.w,
+                                fontWeight: FontWeight.w600,
+                                fontFamily: "Poppins",
+                                color: Colors.black),
+                          )),
+                    ),
+                    InkWell(
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => DetailsPage(
+                                size: widget.size,
+                                colorname: widget.colorname,
+                                name: widget.name,
+                                qty: widget.qty,
+                                img: img),
+                          ),
+                        );
+                      },
+                      child: Container(
+                          alignment: Alignment.center,
+                          width: MediaQuery.of(context).size.width * 0.40,
+                          height: MediaQuery.of(context).size.height * 0.06,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: Color(0xfff66a4b),
+                          ),
+                          child: Text(
+                            'Next',
+                            style: TextStyle(
+                                fontSize: 4.w,
+                                fontWeight: FontWeight.w600,
+                                fontFamily: "Poppins",
+                                color: Colors.black),
+                          )),
+                    ),
+                  ],
                 ),
                 SizedBox(
                   height: 0.7.h,
@@ -356,6 +480,41 @@ class _CartpageState extends State<Cartpage> {
     );
   }
 
+  fetchcartapi() async {
+    SharedPreferences _sharedpreferences =
+        await SharedPreferences.getInstance();
+    final Map<String, String> data = {};
+
+    data['d_id'] = _sharedpreferences.getString('Did').toString();
+
+    data['action'] = 'cart_products';
+
+    print(data);
+
+    checkInternet().then(
+      (internet) async {
+        if (internet) {
+          Authprovider().block(data).then(
+            (Response response) async {
+              print(response.statusCode);
+              cart = CartModal.fromJson(json.decode(response.body));
+
+              if (response.statusCode == 200 && cart!.status == 'success') {
+                print('Fetched');
+
+                if (kDebugMode) {}
+              } else {
+                dialog();
+              }
+            },
+          );
+        } else {
+          setState(() {});
+        }
+      },
+    );
+  }
+
   blockapi1() async {
     SharedPreferences _sharedpreferences =
         await SharedPreferences.getInstance();
@@ -381,7 +540,6 @@ class _CartpageState extends State<Cartpage> {
 
               if (response.statusCode == 200 && eror!.status == 'success') {
                 print('Blocked');
-
 
                 if (kDebugMode) {}
               } else {

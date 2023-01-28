@@ -14,6 +14,14 @@ responses(http.Response response) {
         }
         return response;
       }
+    case 302:
+      {
+        // print((response.body)['statusCode']);
+        if (jsonDecode(response.body)['statusCode'] == 300) {
+          // SaveDataLocal.clearUserData();
+        }
+        return response;
+      }
     case 400:
     case 401:
     case 403:

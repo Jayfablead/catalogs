@@ -11,6 +11,7 @@ class Authprovider with ChangeNotifier {
   Map<String, String> headers = {
     'Authorization': 'hXuRUGsEGuhGf6KG',
   };
+
   Future<http.Response> signupapi(Map<String, String> bodyData) async {
     var body = jsonEncode(bodyData);
     const url =
@@ -146,6 +147,7 @@ class Authprovider with ChangeNotifier {
 
     print(responseJson);
   }
+
   Future<http.Response> block(Map<String, dynamic> bodyData) async {
     print(bodyData);
     var body = jsonEncode(bodyData);
@@ -171,6 +173,7 @@ class Authprovider with ChangeNotifier {
 
     print(responseJson);
   }
+
   Future<http.Response> unblock(Map<String, dynamic> bodyData) async {
     print(bodyData);
     var body = jsonEncode(bodyData);
@@ -196,6 +199,7 @@ class Authprovider with ChangeNotifier {
 
     print(responseJson);
   }
+
   Future<http.Response> user(Map<String, dynamic> bodyData) async {
     print(bodyData);
     var body = jsonEncode(bodyData);
@@ -222,5 +226,55 @@ class Authprovider with ChangeNotifier {
     print(responseJson);
   }
 
-}
+  Future<http.Response> cart(Map<String, dynamic> bodyData) async {
+    print(bodyData);
+    var body = jsonEncode(bodyData);
+    const url =
+        'https://distributor-app.fableadtechnolabs.com/admin/api/ajax.php/?action=add_to_cart';
+    var responseJson;
 
+    try {
+      final response = await http
+          .post(Uri.parse(url), body: bodyData, headers: headers)
+          .timeout(
+        const Duration(seconds: 30),
+        onTimeout: () {
+          throw const SocketException('Something went wrong');
+        },
+      );
+      print(response.statusCode);
+      responseJson = responses(response);
+    } on SocketException {
+      throw FetchDataException('No Internet connection');
+    }
+    return responseJson;
+
+    print(responseJson);
+  }
+
+  Future<http.Response> fetchcart(Map<String, dynamic> bodyData) async {
+    print(bodyData);
+    var body = jsonEncode(bodyData);
+    const url =
+        'https://distributor-app.fableadtechnolabs.com/admin/api/ajax.php/?action=cart_products';
+    var responseJson;
+
+    try {
+      final response = await http
+          .post(Uri.parse(url), body: bodyData, headers: headers)
+          .timeout(
+        const Duration(seconds: 30),
+        onTimeout: () {
+          throw const SocketException('Something went wrong');
+        },
+      );
+      print(response.statusCode);
+      responseJson = responses(response);
+    } on SocketException {
+      throw FetchDataException('No Internet connection');
+    }
+    return responseJson;
+
+    print(responseJson);
+  }
+}

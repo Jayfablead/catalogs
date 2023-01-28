@@ -162,67 +162,117 @@ class _DetailsPageState extends State<DetailsPage> {
                                     height: 2.h,
                                   ),
                                   Container(
-                                    height: 15.h,
-                                    width: MediaQuery.of(context).size.width,
-                                    child: Row(
-                                      children: [
-                                        Image.network(
-                                          widget.img.toString(),
-                                          height: 15.h,
-                                        ),
-                                        SizedBox(
-                                          width: 3.w,
-                                        ),
-                                        Container(width: 50.w,
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceAround,
-                                            children: [
-                                              Text(
-                                                'Product : ' +
-                                                    ' ' +
-                                                    widget.name.toString(),
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.w600,
-                                                    fontFamily: "Poppins",
-                                                    color: Colors.black),
-                                              ),
-                                              Text(
-                                                'Colour : ' +
-                                                    ' ' +
-                                                    widget.colorname.toString(),maxLines: 2,
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.w600,
-
-                                                    fontFamily: "Poppins",
-                                                    color: Colors.black),
-                                              ),
-                                              Text(
-                                                'Qty : ' +
-                                                    ' ' +
-                                                    widget.qty.toString(),
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.w600,
-                                                    fontFamily: "Poppins",
-                                                    color: Colors.black),
-                                              ),
-                                              Text(
-                                                'Size : ' +
-                                                    ' ' +
-                                                    widget.size.toString(),
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.w600,
-                                                    fontFamily: "Poppins",
-                                                    color: Colors.black),
-                                              ),
-                                            ],
+                                    height: 38.h,
+                                    child: ListView.builder(
+                                      itemBuilder: (context, index) {
+                                        return Padding(
+                                          padding: EdgeInsets.only(top: 10),
+                                          child: Container(
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width,
+                                            child: Column(
+                                              children: [
+                                                Align(alignment: Alignment.centerLeft,
+                                                  child: Text(
+                                                    '${index + 1}.',
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        fontFamily: "Poppins",
+                                                        color: Colors.black),
+                                                  ),
+                                                ),
+                                                Row(
+                                                  children: [
+                                                    Image.network(
+                                                      widget.img.toString(),
+                                                      height: 15.h,
+                                                    ),
+                                                    SizedBox(
+                                                      width: 3.w,
+                                                    ),
+                                                    Container(
+                                                      width: 50.w,
+                                                      child: Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceAround,
+                                                        children: [
+                                                          Text(
+                                                            'Product : ' +
+                                                                ' ' +
+                                                                widget.name
+                                                                    .toString(),
+                                                            style: TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w600,
+                                                                fontFamily:
+                                                                    "Poppins",
+                                                                color: Colors
+                                                                    .black),
+                                                          ),
+                                                          Text(
+                                                            'Colour : ' +
+                                                                ' ' +
+                                                                widget.colorname
+                                                                    .toString(),
+                                                            maxLines: 2,
+                                                            style: TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w600,
+                                                                fontFamily:
+                                                                    "Poppins",
+                                                                color: Colors
+                                                                    .black),
+                                                          ),
+                                                          Text(
+                                                            'Qty : ' +
+                                                                ' ' +
+                                                                widget.qty
+                                                                    .toString(),
+                                                            style: TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w600,
+                                                                fontFamily:
+                                                                    "Poppins",
+                                                                color: Colors
+                                                                    .black),
+                                                          ),
+                                                          Text(
+                                                            'Size : ' +
+                                                                ' ' +
+                                                                widget.size
+                                                                    .toString(),
+                                                            style: TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w600,
+                                                                fontFamily:
+                                                                    "Poppins",
+                                                                color: Colors
+                                                                    .black),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
                                           ),
-                                        ),
-                                      ],
+                                        );
+                                      },
+                                      itemCount: 3,
                                     ),
                                   ),
+
                                   SizedBox(
                                     height: 2.h,
                                   ),
@@ -558,7 +608,9 @@ class _DetailsPageState extends State<DetailsPage> {
                   InkWell(
                     onTap: () {
                       if (_formKey.currentState!.validate()) {
-                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => ThankyouPage(),));
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => ThankyouPage(),
+                        ));
                       }
                     },
                     child: Container(
